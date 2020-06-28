@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:rssreader/theme/style.dart';
 import 'package:rssreader/screens/home_screen.dart';
 
 void main() => runApp(RssReader());
@@ -11,7 +12,7 @@ class RssReader extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: _title,
-      theme: ThemeData(),
+      theme: Style.getThemeData(),
       home: HomeScreen(),
     );
   }

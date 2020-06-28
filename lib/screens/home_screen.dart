@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rssreader/screens/list_drawer.dart';
+
+import 'package:rssreader/components/list_drawer.dart';
+import 'package:rssreader/services/networking.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -11,8 +13,9 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.done_all),
             tooltip: 'Mark all as read',
-            onPressed: () {
-              
+            onPressed: () async {
+              var nh = NetworkHelper();
+              await nh.load();
             },
           ),
           IconButton(
@@ -25,6 +28,14 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       drawer: ListDrawer(),
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text("Number $index"),
+          );
+        },
+        itemCount: 10,
+      ),
     );
   }
 }
