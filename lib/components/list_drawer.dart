@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class ListDrawer extends StatelessWidget {
@@ -34,11 +32,21 @@ class ListDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text('Item 1'),
+            title: Text('Settings'),
+            leading: Icon(Icons.settings),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.popAndPushNamed(context, '/settings');
             },
           ),
+          AboutListTile(
+            icon: Icon(Icons.info_outline),
+            child: Text("About"),
+            applicationVersion: '1.0.0',
+            applicationIcon: Icon(Icons.ac_unit),
+            aboutBoxChildren: <Widget>[
+              Text("A Simple RSS Reader."),
+            ],
+          )
         ],
       ),
     );
