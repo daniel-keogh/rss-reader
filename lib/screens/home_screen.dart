@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rssreader/components/article_item.dart';
 
 import 'package:webfeed/domain/rss_feed.dart';
 
@@ -7,12 +8,13 @@ import 'package:rssreader/models/article.dart';
 import 'package:rssreader/services/networking.dart';
 
 class HomeScreen extends StatefulWidget {
+  final nh = NetworkHelper();
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  NetworkHelper nh = NetworkHelper();
   List<Article> feedItems = [];
 
   @override
@@ -22,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> refreshFeeds() async {
-    RssFeed result = await nh.loadFeed();
+    RssFeed result = await widget.nh.loadFeed();
 
     if (result.items.length > 0) {
       setState(() {
@@ -42,22 +44,19 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildList() {
     return feedItems.length != 0
         ? RefreshIndicator(
-            child: ListView.builder(
+            child: ListView.separated(
               itemBuilder: (context, index) {
-                var item = feedItems[index];
-
-                return ListTile(
-                  title: Text(item.title),
-                  subtitle: Text(item.publisher),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(item.imageUrl),
-                  ),
-                  onTap: () {
-                    print(item);
-                  },
+                return ArticleItem(
+                  article: feedItems[index],
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  thickness: 0.5,
                 );
               },
               itemCount: feedItems.length,
+              padding: EdgeInsets.symmetric(vertical: 10.0),
             ),
             onRefresh: refreshFeeds,
           )
