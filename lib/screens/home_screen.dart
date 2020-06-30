@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rssreader/components/article_item.dart';
 
 import 'package:webfeed/domain/rss_feed.dart';
+import 'package:intl/intl.dart';
 
 import 'package:rssreader/components/list_drawer.dart';
 import 'package:rssreader/models/article.dart';
@@ -9,6 +10,7 @@ import 'package:rssreader/services/networking.dart';
 
 class HomeScreen extends StatefulWidget {
   final nh = NetworkHelper();
+  final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
             isRead: false,
             publisher: result.title,
             url: item.link,
+            date: widget.df.parse(item.pubDate),
           );
         }).toList();
       });
@@ -46,13 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ? RefreshIndicator(
             child: ListView.separated(
               itemBuilder: (context, index) {
+                var article = feedItems[index];
                 return ArticleItem(
-                  article: feedItems[index],
+                  article: article,
                   handleTap: () {
-                    widget.nh.viewArticle(feedItems[index].url);
-                    setState(() {
-                      feedItems[index].isRead = true;
-                    });
+                    widget.nh.viewArticle(article.url);
+                    setState(() => article.isRead = true);
                   },
                 );
               },
@@ -74,7 +76,11 @@ class _HomeScreenState extends State<HomeScreen> {
       IconButton(
         icon: Icon(Icons.done_all),
         tooltip: 'Mark all as read',
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            feedItems.forEach((item) => item.isRead = true);
+          });
+        },
       ),
       IconButton(
         icon: Icon(Icons.search),

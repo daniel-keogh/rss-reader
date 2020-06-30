@@ -14,6 +14,7 @@ class RssReader extends StatelessWidget {
     return MaterialApp(
       title: _title,
       theme: Style.getThemeData(),
+      darkTheme: Style.getDarkThemeData(),
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
