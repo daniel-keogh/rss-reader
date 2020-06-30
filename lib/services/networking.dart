@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:webfeed/webfeed.dart';
-//import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NetworkHelper {
   static const String FEED_URL =
@@ -14,6 +14,12 @@ class NetworkHelper {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  void viewArticle(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
     }
   }
 }

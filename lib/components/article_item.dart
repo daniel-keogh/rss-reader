@@ -4,10 +4,12 @@ import 'package:rssreader/models/article.dart';
 
 class ArticleItem extends StatelessWidget {
   final Article article;
+  final Function handleTap;
 
   const ArticleItem({
     Key key,
     @required this.article,
+    @required this.handleTap,
   }) : super(key: key);
 
   @override
@@ -20,14 +22,13 @@ class ArticleItem extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
+            color: article.isRead ? Colors.grey : null,
           ),
         ),
       ),
       subtitle: Text(article.publisher),
       leading: Image.network(article.imageUrl),
-      onTap: () {
-        print(article);
-      },
+      onTap: handleTap,
     );
   }
 }

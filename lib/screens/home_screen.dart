@@ -48,6 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) {
                 return ArticleItem(
                   article: feedItems[index],
+                  handleTap: () {
+                    widget.nh.viewArticle(feedItems[index].url);
+                    setState(() {
+                      feedItems[index].isRead = true;
+                    });
+                  },
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
