@@ -8,7 +8,7 @@ class Subscriptions {
     'https://www.theguardian.com/world/zimbabwe/rss',
   ];
 
-  export() async {
+  Future<File> export() async {
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0"');
     builder.element('opml', nest: () {
@@ -35,7 +35,7 @@ class Subscriptions {
     });
 
     final xml = builder.build();
-    await _writeXmlString(xml);
+    return await _writeXmlString(xml);
   }
 
   Future<File> _writeXmlString(XmlNode xml) async {

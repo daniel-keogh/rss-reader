@@ -32,6 +32,13 @@ class ListDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            title: Text('Sources'),
+            leading: Icon(Icons.library_add),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/sources');
+            },
+          ),
+          ListTile(
             title: Text('Settings'),
             leading: Icon(Icons.settings),
             onTap: () {
