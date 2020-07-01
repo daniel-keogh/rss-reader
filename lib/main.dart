@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:rssreader/theme/style.dart';
 import 'package:rssreader/screens/home_screen.dart';
-import 'package:rssreader/screens/sources.dart';
+import 'package:rssreader/screens/sources_screen.dart';
 import 'package:rssreader/screens/settings_screen.dart';
 
 void main() => runApp(RssReader());
