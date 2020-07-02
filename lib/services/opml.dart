@@ -17,7 +17,7 @@ class Opml {
     );
 
     final builder = XmlBuilder();
-    builder.processing('xml', 'version="1.0"');
+    builder.processing('xml', 'version="1.0" encoding="utf-8"');
     builder.element('opml', nest: () {
       builder.attribute('version', '2.0');
       builder.element('head', nest: () {
@@ -29,25 +29,29 @@ class Opml {
         });
       });
 
-      builder.element('body', nest: () {
-        categories.forEach((category) {
-          builder.element('outline', nest: () {
-            builder.attribute('text', category);
-            builder.attribute('title', category);
+      builder.element(
+        'body',
+        isSelfClosing: false,
+        nest: () {
+          categories.forEach((category) {
+            builder.element('outline', nest: () {
+              builder.attribute('text', category);
+              builder.attribute('title', category);
 
-            subscriptions.forEach((sub) {
-              if (sub.category == category) {
-                builder.element('outline', nest: () {
-                  builder.attribute('text', sub.title);
-                  builder.attribute('title', sub.title);
-                  builder.attribute('type', 'rss');
-                  builder.attribute('xmlUrl', sub.xmlUrl);
-                });
-              }
+              subscriptions.forEach((sub) {
+                if (sub.category == category) {
+                  builder.element('outline', nest: () {
+                    builder.attribute('text', sub.title);
+                    builder.attribute('title', sub.title);
+                    builder.attribute('type', 'rss');
+                    builder.attribute('xmlUrl', sub.xmlUrl);
+                  });
+                }
+              });
             });
           });
-        });
-      });
+        },
+      );
     });
 
     final xml = builder.build();
