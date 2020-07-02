@@ -27,7 +27,8 @@ class ArticleItem extends StatelessWidget {
         ),
       ),
       subtitle: Text(article.publisher),
-      leading: Image.network(article.imageUrl),
+      leading:
+          article.imageUrl != null ? Image.network(article.imageUrl) : null,
       onTap: handleTap,
     );
   }

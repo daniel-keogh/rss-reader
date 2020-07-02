@@ -26,22 +26,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> refreshFeeds() async {
-    RssFeed result = await widget.nh.loadFeed();
+    List<RssFeed> result = await widget.nh.loadFeeds();
 
-    if (result.items.length > 0) {
-      setState(() {
-        feedItems = result.items.map((item) {
+    result.forEach((feed) {
+      if (feed.items.length > 0) {
+        List<Article> batch = feed.items.map((item) {
+          String img;
+          if (item.media.contents.length > 0) {
+            img = item.media.contents[0].url;
+          } else {
+            img = item.enclosure?.url;
+          }
+
           return Article(
             title: item.title,
-            imageUrl: item.media.contents[0].url,
+            imageUrl: img,
             isRead: false,
-            publisher: result.title,
+            publisher: feed.title,
             url: item.link,
             date: widget.df.parse(item.pubDate),
           );
         }).toList();
-      });
-    }
+
+        setState(() {
+          feedItems.addAll(batch);
+        });
+      }
+    });
+
+    setState(() {
+      feedItems.sort((a, b) => b.date.compareTo(a.date));
+    });
   }
 
   Widget _buildList() {
