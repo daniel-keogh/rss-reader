@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:rssreader/components/catalog_item.dart';
 import 'package:rssreader/models/catalog_photo.dart';
+import 'package:rssreader/screens/recommended_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
   final List<CatalogPhoto> _photos = [
@@ -62,6 +63,16 @@ class CatalogScreen extends StatelessWidget {
         children: _photos.map<Widget>((photo) {
           return CatalogItem(
             photo: photo,
+            handleTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecommendedScreen(
+                    category: photo.title,
+                  ),
+                ),
+              );
+            },
           );
         }).toList(),
       ),

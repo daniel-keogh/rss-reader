@@ -4,10 +4,12 @@ import 'package:rssreader/models/catalog_photo.dart';
 
 class CatalogItem extends StatelessWidget {
   final CatalogPhoto photo;
+  final Function handleTap;
 
   CatalogItem({
     Key key,
     @required this.photo,
+    @required this.handleTap,
   }) : super(key: key);
 
   @override
@@ -50,9 +52,7 @@ class CatalogItem extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {
-                print(photo.title);
-              },
+              onTap: handleTap,
             ),
           ),
         )
