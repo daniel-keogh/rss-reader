@@ -41,7 +41,7 @@ class SubscriptionsDb {
           $_COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
           $_COLUMN_TITLE TEXT NOT NULL,
           $_COLUMN_CATEGORY TEXT NOT NULL,
-          $_COLUMN_URL TEXT NOT NULL
+          $_COLUMN_URL TEXT UNIQUE NOT NULL
           )
           """,
         );
