@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import 'package:rssreader/services/subscriptions.dart';
+import 'package:rssreader/services/opml.dart';
 
 class SourcesScreen extends StatelessWidget {
-  final _subs = Subscriptions();
+  final _opml = Opml();
 
   SnackBar _getSnackBar(String text) {
     return SnackBar(
@@ -29,7 +28,7 @@ class SourcesScreen extends StatelessWidget {
               icon: Icon(Icons.insert_drive_file),
               tooltip: 'Export',
               onPressed: () async {
-                File file = await _subs.export();
+                File file = await _opml.export();
 
                 if (file != null) {
                   var msg = "File exported to: '${file.path}'";
