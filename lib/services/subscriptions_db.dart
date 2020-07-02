@@ -4,12 +4,12 @@ import 'package:sqflite/sqflite.dart';
 import 'package:rssreader/models/subscription.dart';
 
 class SubscriptionsDb {
-  static const String TABLE_SUBSCRIPTIONS = "subscriptions";
+  static const String _TABLE_SUBSCRIPTIONS = "subscriptions";
 
-  static const String COLUMN_ID = "id";
-  static const String COLUMN_TITLE = "title";
-  static const String COLUMN_CATEGORY = "category";
-  static const String COLUMN_URL = "xmlUrl";
+  static const String _COLUMN_ID = "id";
+  static const String _COLUMN_TITLE = "title";
+  static const String _COLUMN_CATEGORY = "category";
+  static const String _COLUMN_URL = "xmlUrl";
 
   static final SubscriptionsDb _instance = SubscriptionsDb._();
 
@@ -37,11 +37,11 @@ class SubscriptionsDb {
       version: 1,
       onCreate: (db, version) async {
         await db.execute(
-          """CREATE TABLE $TABLE_SUBSCRIPTIONS (
-          $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-          $COLUMN_TITLE TEXT NOT NULL,
-          $COLUMN_CATEGORY TEXT NOT NULL,
-          $COLUMN_URL TEXT NOT NULL
+          """CREATE TABLE $_TABLE_SUBSCRIPTIONS (
+          $_COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+          $_COLUMN_TITLE TEXT NOT NULL,
+          $_COLUMN_CATEGORY TEXT NOT NULL,
+          $_COLUMN_URL TEXT NOT NULL
           )
           """,
         );
@@ -53,12 +53,12 @@ class SubscriptionsDb {
     final db = await database;
 
     var subs = await db.query(
-      TABLE_SUBSCRIPTIONS,
+      _TABLE_SUBSCRIPTIONS,
       columns: [
-        COLUMN_ID,
-        COLUMN_TITLE,
-        COLUMN_CATEGORY,
-        COLUMN_URL,
+        _COLUMN_ID,
+        _COLUMN_TITLE,
+        _COLUMN_CATEGORY,
+        _COLUMN_URL,
       ],
     );
 
@@ -75,14 +75,14 @@ class SubscriptionsDb {
     final db = await database;
 
     List<Map> maps = await db.query(
-      TABLE_SUBSCRIPTIONS,
+      _TABLE_SUBSCRIPTIONS,
       columns: [
-        COLUMN_ID,
-        COLUMN_TITLE,
-        COLUMN_CATEGORY,
-        COLUMN_URL,
+        _COLUMN_ID,
+        _COLUMN_TITLE,
+        _COLUMN_CATEGORY,
+        _COLUMN_URL,
       ],
-      where: '$COLUMN_ID = ?',
+      where: '$_COLUMN_ID = ?',
       whereArgs: [id],
     );
 
@@ -97,7 +97,7 @@ class SubscriptionsDb {
     final db = await database;
 
     subscription.id = await db.insert(
-      TABLE_SUBSCRIPTIONS,
+      _TABLE_SUBSCRIPTIONS,
       subscription.toMap(),
     );
 
@@ -108,9 +108,9 @@ class SubscriptionsDb {
     final db = await database;
 
     return await db.update(
-      TABLE_SUBSCRIPTIONS,
+      _TABLE_SUBSCRIPTIONS,
       subscription.toMap(),
-      where: '$COLUMN_ID = ?',
+      where: '$_COLUMN_ID = ?',
       whereArgs: [subscription.id],
     );
   }
@@ -119,8 +119,8 @@ class SubscriptionsDb {
     final db = await database;
 
     return await db.delete(
-      TABLE_SUBSCRIPTIONS,
-      where: '$COLUMN_ID = ?',
+      _TABLE_SUBSCRIPTIONS,
+      where: '$_COLUMN_ID = ?',
       whereArgs: [id],
     );
   }
