@@ -42,7 +42,7 @@ class CatalogItem extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: Image.asset(
-                photo.assetName,
+                photo.asset,
                 fit: BoxFit.cover,
               ),
             ),

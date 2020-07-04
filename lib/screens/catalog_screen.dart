@@ -10,43 +10,43 @@ class CatalogScreen extends StatelessWidget {
   final List<CatalogPhoto> _photos = [
     CatalogPhoto(
       title: "News",
-      assetName: "assets/catalog/news.jpg",
+      asset: "assets/catalog/news.jpg",
     ),
     CatalogPhoto(
       title: "Technology",
-      assetName: "assets/catalog/tech.jpg",
+      asset: "assets/catalog/tech.jpg",
     ),
     CatalogPhoto(
       title: "Science & Space",
-      assetName: "assets/catalog/science.jpg",
+      asset: "assets/catalog/science.jpg",
     ),
     CatalogPhoto(
       title: "Business",
-      assetName: "assets/catalog/business.jpg",
+      asset: "assets/catalog/business.jpg",
     ),
     CatalogPhoto(
       title: "Software Development",
-      assetName: "assets/catalog/software.jpg",
+      asset: "assets/catalog/software.jpg",
     ),
     CatalogPhoto(
       title: "DIY",
-      assetName: "assets/catalog/diy.jpg",
+      asset: "assets/catalog/diy.jpg",
     ),
     CatalogPhoto(
       title: "Books",
-      assetName: "assets/catalog/books.jpg",
+      asset: "assets/catalog/books.jpg",
     ),
     CatalogPhoto(
       title: "Music",
-      assetName: "assets/catalog/music.jpg",
+      asset: "assets/catalog/music.jpg",
     ),
     CatalogPhoto(
       title: "Gaming",
-      assetName: "assets/catalog/gaming.jpg",
+      asset: "assets/catalog/gaming.jpg",
     ),
     CatalogPhoto(
       title: "Sport",
-      assetName: "assets/catalog/sport.jpg",
+      asset: "assets/catalog/sport.jpg",
     ),
   ];
 
@@ -55,6 +55,13 @@ class CatalogScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Catalog'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: () {},
+          ),
+        ],
       ),
       body: GridView.count(
         crossAxisCount: 2,

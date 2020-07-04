@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:webfeed/webfeed.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/models/subscription.dart';
@@ -28,12 +27,6 @@ class NetworkHelper {
     return feeds;
   }
 
-  Future viewArticle(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    }
-  }
-
   Future<List<SearchResult>> feedSearch(
     String query, [
     int count = 20,
@@ -55,7 +48,6 @@ class NetworkHelper {
             (item) => SearchResult(
               title: item['title'],
               xmlUrl: item['feedId'].toString().substring(5),
-              description: item['description'],
               publisherImg: item['visualUrl'],
               website: item['website'],
             ),

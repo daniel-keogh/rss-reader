@@ -1,9 +1,9 @@
 class CatalogPhoto {
-  String assetName;
+  String asset;
   String title;
 
   CatalogPhoto({
-    this.assetName,
+    this.asset,
     this.title,
   });
 
@@ -11,7 +11,7 @@ class CatalogPhoto {
   String toString() {
     return """
     {
-      assetName: $assetName,
+      asset: $asset,
       title: $title, 
     }""";
   }

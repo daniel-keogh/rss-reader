@@ -70,15 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ArticleItem(
                   article: article,
                   handleTap: () {
-                    widget.nh.viewArticle(article.url);
+                    article.view();
                     setState(() => article.isRead = true);
                   },
                 );
               },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider(
-                  thickness: 0.5,
-                );
+              separatorBuilder: (context, index) {
+                return Divider(thickness: 0.5);
               },
               itemCount: feedItems.length,
               padding: EdgeInsets.symmetric(vertical: 10.0),
