@@ -21,6 +21,20 @@ class RecommendedScreen extends StatefulWidget {
 class _RecommendedScreenState extends State<RecommendedScreen> {
   final NetworkHelper nh = NetworkHelper();
   final SubscriptionsDb db = SubscriptionsDb.getInstance();
+  final List<String> feeds = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentSubs();
+  }
+
+  Future getCurrentSubs() async {
+    var all = await db.getAll();
+    setState(() {
+      feeds.addAll(all.map((e) => e.xmlUrl));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +53,16 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
                 itemBuilder: (context, index) {
                   return SearchItem(
                     searchResult: data[index],
-                    handlePress: () async {
+                    isSubscribed: feeds.contains(data[index].xmlUrl),
+                    handleSub: () async {
                       await db.insert(Subscription(
                         title: data[index].title,
                         xmlUrl: data[index].xmlUrl,
                         category: widget.category,
                       ));
+                    },
+                    handleUnsub: () async {
+                      await db.deleteByXmlUrl(data[index].xmlUrl);
                     },
                   );
                 },

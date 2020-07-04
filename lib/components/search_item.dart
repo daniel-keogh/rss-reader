@@ -4,12 +4,16 @@ import 'package:rssreader/models/search_result.dart';
 
 class SearchItem extends StatelessWidget {
   final SearchResult searchResult;
-  final Function handlePress;
+  final bool isSubscribed;
+  final Function handleSub;
+  final Function handleUnsub;
 
   SearchItem({
     Key key,
     @required this.searchResult,
-    @required this.handlePress,
+    @required this.isSubscribed,
+    @required this.handleSub,
+    @required this.handleUnsub,
   }) : super(key: key);
 
   @override
@@ -36,11 +40,17 @@ class SearchItem extends StatelessWidget {
               backgroundColor: Colors.transparent,
             )
           : null,
-      trailing: IconButton(
-        icon: Icon(Icons.add_circle),
-        color: Colors.blueAccent,
-        onPressed: handlePress,
-      ),
+      trailing: !isSubscribed
+          ? IconButton(
+              icon: Icon(Icons.add_circle),
+              color: Colors.blueAccent,
+              onPressed: handleSub,
+            )
+          : IconButton(
+              icon: Icon(Icons.check_circle),
+              color: Colors.redAccent,
+              onPressed: handleUnsub,
+            ),
     );
   }
 }

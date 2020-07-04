@@ -71,7 +71,15 @@ class SubscriptionsDb {
     return subsList;
   }
 
-  Future<Subscription> get(int id) async {
+  Future<Subscription> getById(int id) async {
+    return await _get(_COLUMN_ID, id);
+  }
+
+  Future<Subscription> getByXmlUrl(String xmlUrl) async {
+    return await _get(_COLUMN_URL, xmlUrl);
+  }
+
+  Future<Subscription> _get(String column, dynamic arg) async {
     final db = await database;
 
     List<Map> maps = await db.query(
@@ -82,8 +90,8 @@ class SubscriptionsDb {
         _COLUMN_CATEGORY,
         _COLUMN_URL,
       ],
-      where: '$_COLUMN_ID = ?',
-      whereArgs: [id],
+      where: '$column = ?',
+      whereArgs: [arg],
     );
 
     if (maps.length > 0) {
@@ -115,13 +123,21 @@ class SubscriptionsDb {
     );
   }
 
-  Future<int> delete(int id) async {
+  Future<int> deleteById(int id) async {
+    return await _delete(_COLUMN_ID, id);
+  }
+
+  Future<int> deleteByXmlUrl(String xmlUrl) async {
+    return await _delete(_COLUMN_URL, xmlUrl);
+  }
+
+  Future<int> _delete(String column, dynamic arg) async {
     final db = await database;
 
     return await db.delete(
       _TABLE_SUBSCRIPTIONS,
-      where: '$_COLUMN_ID = ?',
-      whereArgs: [id],
+      where: '$column = ?',
+      whereArgs: [arg],
     );
   }
 
