@@ -8,6 +8,8 @@ import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 
 class SourcesScreen extends StatefulWidget {
+  static const String route = '/sources';
+
   final _opml = Opml();
   final _subsDb = SubscriptionsDb.getInstance();
 

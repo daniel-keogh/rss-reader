@@ -17,12 +17,12 @@ class RssReader extends StatelessWidget {
       title: _title,
       theme: Style.getThemeData(),
       darkTheme: Style.getDarkThemeData(),
-      initialRoute: '/',
+      initialRoute: HomeScreen.route,
       routes: {
-        '/': (context) => HomeScreen(),
-        '/catalog': (context) => CatalogScreen(),
-        '/sources': (context) => SourcesScreen(),
-        '/settings': (context) => SettingsScreen(),
+        HomeScreen.route: (context) => HomeScreen(),
+        CatalogScreen.route: (context) => CatalogScreen(),
+        SourcesScreen.route: (context) => SourcesScreen(),
+        SettingsScreen.route: (context) => SettingsScreen(),
       },
     );
   }

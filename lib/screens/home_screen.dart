@@ -9,6 +9,8 @@ import 'package:rssreader/models/article.dart';
 import 'package:rssreader/services/networking.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String route = '/';
+
   final nh = NetworkHelper();
   final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
 

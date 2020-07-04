@@ -5,6 +5,8 @@ import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/screens/recommended_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
+  static const String route = '/catalog';
+
   final List<CatalogPhoto> _photos = [
     CatalogPhoto(
       title: "News",

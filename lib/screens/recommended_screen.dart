@@ -7,6 +7,8 @@ import 'package:rssreader/services/networking.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 
 class RecommendedScreen extends StatefulWidget {
+  static const String id = '/recommended';
+
   final String category;
 
   RecommendedScreen({

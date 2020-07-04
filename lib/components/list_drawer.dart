@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:rssreader/screens/catalog_screen.dart';
+import 'package:rssreader/screens/settings_screen.dart';
+import 'package:rssreader/screens/sources_screen.dart';
+
 class ListDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -35,21 +39,21 @@ class ListDrawer extends StatelessWidget {
             title: Text('Catalog'),
             leading: Icon(Icons.grid_on),
             onTap: () {
-              Navigator.popAndPushNamed(context, '/catalog');
+              Navigator.popAndPushNamed(context, CatalogScreen.route);
             },
           ),
           ListTile(
             title: Text('Sources'),
             leading: Icon(Icons.library_add),
             onTap: () {
-              Navigator.popAndPushNamed(context, '/sources');
+              Navigator.popAndPushNamed(context, SourcesScreen.route);
             },
           ),
           ListTile(
             title: Text('Settings'),
             leading: Icon(Icons.settings),
             onTap: () {
-              Navigator.popAndPushNamed(context, '/settings');
+              Navigator.popAndPushNamed(context, SettingsScreen.route);
             },
           ),
           AboutListTile(
