@@ -1,11 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+
+import 'package:rssreader/components/search_item.dart';
+import 'package:rssreader/models/search_result.dart';
+import 'package:rssreader/models/subscription.dart';
+import 'package:rssreader/services/networking.dart';
+import 'package:rssreader/services/subscriptions_db.dart';
 
 class RecommendedScreen extends StatefulWidget {
   final String category;
 
-  const RecommendedScreen({
+  RecommendedScreen({
     Key key,
     @required this.category,
   }) : super(key: key);
@@ -15,6 +19,9 @@ class RecommendedScreen extends StatefulWidget {
 }
 
 class _RecommendedScreenState extends State<RecommendedScreen> {
+  final NetworkHelper nh = NetworkHelper();
+  final SubscriptionsDb db = SubscriptionsDb.getInstance();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,31 +30,31 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
       ),
       body: Container(
         child: FutureBuilder(
-          future: DefaultAssetBundle.of(context).loadString(
-            'assets/sources.json',
-          ),
+          future: nh.feedSearch(widget.category),
           builder: (context, snapshot) {
-            List<dynamic> data = json.decode(snapshot.data.toString());
+            if (snapshot.connectionState == ConnectionState.done) {
+              List<SearchResult> data = snapshot.data;
 
-            if (data != null) {
-              data.removeWhere((item) => item['category'] != widget.category);
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  return SearchItem(
+                    searchResult: data[index],
+                    handlePress: () async {
+                      await db.insert(Subscription(
+                        title: data[index].title,
+                        xmlUrl: data[index].xmlUrl,
+                        category: widget.category,
+                      ));
+                    },
+                  );
+                },
+                itemCount: data == null ? 0 : data.length,
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
-
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text("title: " + data[index]['title']),
-                      Text("xmlUrl: " + data[index]['xmlUrl']),
-                      Text("category: " + data[index]['category']),
-                    ],
-                  ),
-                );
-              },
-              itemCount: data == null ? 0 : data.length,
-            );
           },
         ),
       ),
