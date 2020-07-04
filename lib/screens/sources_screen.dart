@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:rssreader/components/subscription_item.dart';
 import 'package:rssreader/models/subscription.dart';
-
+import 'package:rssreader/screens/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 
@@ -63,6 +64,47 @@ class _SourcesScreenState extends State<SourcesScreen> {
     ];
   }
 
+  void _showModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(10.0),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          height: 190.0,
+          color: Colors.transparent,
+          child: ListView(
+            padding: EdgeInsets.symmetric(vertical: 10.0),
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.search),
+                title: Text("Catalog"),
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed(
+                    CatalogScreen.route,
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.attach_file),
+                title: Text("Import OPML"),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: Icon(Icons.link),
+                title: Text("RSS link"),
+                onTap: () {},
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,9 +120,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
             );
           },
           separatorBuilder: (context, index) {
-            return Divider(
-              thickness: 0.5,
-            );
+            return Divider(thickness: 0.5);
           },
           itemCount: subscriptions.length,
           padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -88,7 +128,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () => _showModalBottomSheet(context),
       ),
     );
   }
