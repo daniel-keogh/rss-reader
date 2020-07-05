@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:xml/xml.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -70,14 +71,44 @@ class Opml {
     );
   }
 
-//  Future<String> _readXml() async {
-//    try {
-//      final directory = await getExternalStorageDirectory();
-//      final file = File('${directory.path}/subscriptions.opml');
-//
-//      return await file.readAsString();
-//    } catch (e) {
-//      return null;
-//    }
-//  }
+  Future import() async {
+    File file = await FilePicker.getFile(
+      type: FileType.custom,
+      allowedExtensions: ['opml', 'xml'],
+    );
+
+    try {
+      String xml = await file.readAsString();
+      XmlDocument doc = parse(xml);
+
+      XmlElement opml = doc.findElements('opml').first;
+      XmlElement body = opml.findElements('body').first;
+
+      body.findElements('outline').forEach((outline) {
+        XmlAttribute category = outline.attributes.firstWhere(
+          (element) => element.name == XmlName.fromString('text'),
+          orElse: () => null,
+        );
+
+        outline.findElements('outline').forEach((item) async {
+          Map<String, String> attributes = {};
+
+          item.attributes.forEach(
+            (attr) => attributes[attr.name.toString()] = attr.value,
+          );
+
+          await _db.insert(
+            Subscription(
+              title: attributes['title'],
+              xmlUrl: attributes['xmlUrl'],
+              category: category?.value ?? 'Uncategorized',
+            ),
+          );
+        });
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }

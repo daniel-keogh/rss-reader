@@ -78,6 +78,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
           color: Colors.transparent,
           child: ListView(
             padding: EdgeInsets.symmetric(vertical: 10.0),
+            physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.search),
@@ -91,7 +92,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
               ListTile(
                 leading: Icon(Icons.attach_file),
                 title: Text("Import OPML"),
-                onTap: () {},
+                onTap: () async {
+                  await Opml().import();
+                },
               ),
               ListTile(
                 leading: Icon(Icons.link),
