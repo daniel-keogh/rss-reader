@@ -1,29 +1,58 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:rssreader/providers/theme_changer.dart';
+import 'package:rssreader/services/prefs.dart';
 import 'package:rssreader/theme/style.dart';
 import 'package:rssreader/screens/home_screen.dart';
 import 'package:rssreader/screens/catalog_screen.dart';
 import 'package:rssreader/screens/sources_screen.dart';
 import 'package:rssreader/screens/settings_screen.dart';
 
-void main() => runApp(RssReader());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Prefs.getInstance().then((prefs) {
+    runApp(RssReader(
+      activeTheme: prefs.getActiveTheme(),
+    ));
+  });
+}
 
 class RssReader extends StatelessWidget {
   static const String _title = 'RSS Reader';
 
+  final ActiveTheme activeTheme;
+
+  RssReader({
+    Key key,
+    @required this.activeTheme,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      theme: Style.getThemeData(),
-      darkTheme: Style.getDarkThemeData(),
-      initialRoute: HomeScreen.route,
-      routes: {
-        HomeScreen.route: (context) => HomeScreen(),
-        CatalogScreen.route: (context) => CatalogScreen(),
-        SourcesScreen.route: (context) => SourcesScreen(),
-        SettingsScreen.route: (context) => SettingsScreen(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeChanger>(
+          create: (context) => ThemeChanger(activeTheme),
+        ),
+      ],
+      child: Builder(
+        builder: (context) => MaterialApp(
+          title: RssReader._title,
+          theme: Provider.of<ThemeChanger>(context).theme == ActiveTheme.light
+              ? Style.getThemeData()
+              : Style.getDarkThemeData(),
+          initialRoute: HomeScreen.route,
+          routes: {
+            HomeScreen.route: (context) => HomeScreen(),
+            CatalogScreen.route: (context) => CatalogScreen(),
+            SourcesScreen.route: (context) => SourcesScreen(),
+            SettingsScreen.route: (context) => SettingsScreen(),
+          },
+        ),
+      ),
     );
   }
 }
