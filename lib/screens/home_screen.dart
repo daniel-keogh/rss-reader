@@ -97,6 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
       ),
+      _FilterButton(
+        onSelected: (value) {},
+      ),
       IconButton(
         icon: Icon(Icons.search),
         tooltip: 'Search',
@@ -116,6 +119,41 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         child: _buildList(),
       ),
+    );
+  }
+}
+
+class _FilterButton extends StatelessWidget {
+  final Function onSelected;
+
+  _FilterButton({
+    Key key,
+    @required this.onSelected,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.filter_list),
+      tooltip: 'Filter',
+      padding: EdgeInsets.zero,
+      onSelected: onSelected,
+      itemBuilder: (context) {
+        return <PopupMenuItem<String>>[
+          PopupMenuItem(
+            child: Text('Show all'),
+            value: 'all',
+          ),
+          PopupMenuItem(
+            child: Text('Show all read'),
+            value: 'read',
+          ),
+          PopupMenuItem(
+            child: Text('Show all unread'),
+            value: 'unread',
+          ),
+        ];
+      },
     );
   }
 }
