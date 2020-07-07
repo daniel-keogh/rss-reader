@@ -63,25 +63,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildList() {
     return feedItems.length != 0
-        ? RefreshIndicator(
-            child: ListView.separated(
-              itemBuilder: (context, index) {
-                var article = feedItems[index];
-                return ArticleItem(
-                  article: article,
-                  handleTap: () {
-                    article.view();
-                    setState(() => article.isRead = true);
-                  },
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(thickness: 0.5);
-              },
-              itemCount: feedItems.length,
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+        ? Scrollbar(
+            child: RefreshIndicator(
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  var article = feedItems[index];
+                  return ArticleItem(
+                    article: article,
+                    handleTap: () {
+                      article.view();
+                      setState(() => article.isRead = true);
+                    },
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider(thickness: 0.5);
+                },
+                itemCount: feedItems.length,
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              onRefresh: refreshFeeds,
             ),
-            onRefresh: refreshFeeds,
           )
         : Center(child: CircularProgressIndicator());
   }

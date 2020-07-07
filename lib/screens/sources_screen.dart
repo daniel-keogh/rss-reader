@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/components/subscription_item.dart';
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/screens/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
@@ -20,6 +19,7 @@ class SourcesScreen extends StatefulWidget {
 
 class _SourcesScreenState extends State<SourcesScreen> {
   List<Subscription> subscriptions = [];
+  Set<String> categories = {};
 
   @override
   void initState() {
@@ -29,8 +29,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
 
   void loadSubscriptions() async {
     var subs = await widget._subsDb.getAll();
+
     setState(() {
       subscriptions.addAll(subs);
+      categories = Set.from(subs.map((e) => e.category));
     });
   }
 
@@ -82,7 +84,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
             children: <Widget>[
               ListTile(
                 leading: Icon(Icons.search),
-                title: Text("Catalog"),
+                title: Text("Search"),
                 onTap: () {
                   Navigator.of(context).pushReplacementNamed(
                     CatalogScreen.route,
@@ -91,9 +93,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.attach_file),
-                title: Text("Import OPML"),
-                onTap: () async {
-                  await Opml().import();
+                title: Text("Import OPML file"),
+                onTap: () {
+                  widget._opml.import();
+                  Navigator.pop(context);
                 },
               ),
               ListTile(
@@ -118,19 +121,37 @@ class _SourcesScreenState extends State<SourcesScreen> {
       body: Container(
         child: ListView.separated(
           itemBuilder: (context, index) {
-            return SubscriptionItem(
-              subscription: subscriptions[index],
+            String category = categories.elementAt(index);
+
+            List<ListTile> items = subscriptions
+                .where((e) => e.category == category)
+                .map(
+                  (e) => ListTile(
+                    title: Text(e.title),
+                    subtitle: Text(e.xmlUrl),
+                  ),
+                )
+                .toList();
+
+            return ExpansionTile(
+              title: Text(category),
+              children: <Widget>[
+                ListView(
+                  children: <Widget>[...items],
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(parent: PageScrollPhysics()),
+                )
+              ],
             );
           },
-          separatorBuilder: (context, index) {
-            return Divider(thickness: 0.5);
-          },
-          itemCount: subscriptions.length,
+          separatorBuilder: (context, index) => Divider(thickness: 0.5),
+          itemCount: categories.length,
           padding: EdgeInsets.symmetric(vertical: 10.0),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Add"),
+        icon: Icon(Icons.add),
         onPressed: () => _showModalBottomSheet(context),
       ),
     );
