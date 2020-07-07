@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/screens/catalog_screen.dart';
+import 'package:rssreader/screens/catalog/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 

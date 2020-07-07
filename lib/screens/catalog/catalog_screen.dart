@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/components/catalog_item.dart';
-import 'package:rssreader/models/catalog_photo.dart';
-import 'package:rssreader/screens/recommended_screen.dart';
+import 'package:rssreader/screens/catalog/catalog_item.dart';
+import 'package:rssreader/screens/catalog/catalog_photo.dart';
+import 'package:rssreader/screens/recommended/recommended_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
   static const String route = '/catalog';
@@ -63,27 +63,29 @@ class CatalogScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        padding: EdgeInsets.all(8),
-        childAspectRatio: 0.85,
-        children: _photos.map<Widget>((photo) {
-          return CatalogItem(
-            photo: photo,
-            handleTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RecommendedScreen(
-                    category: photo.title,
+      body: Container(
+        child: GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          padding: EdgeInsets.all(8),
+          childAspectRatio: 0.85,
+          children: _photos.map<Widget>((photo) {
+            return CatalogItem(
+              photo: photo,
+              handleTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecommendedScreen(
+                      category: photo.title,
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        }).toList(),
+                );
+              },
+            );
+          }).toList(),
+        ),
       ),
     );
   }

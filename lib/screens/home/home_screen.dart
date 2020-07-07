@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rssreader/components/article_item.dart';
 
 import 'package:webfeed/domain/rss_feed.dart';
 import 'package:intl/intl.dart';
 
-import 'package:rssreader/components/list_drawer.dart';
+import 'package:rssreader/components/side_drawer.dart';
+import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/models/article.dart';
 import 'package:rssreader/services/networking.dart';
 
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Home'),
         actions: _appbarActions(),
       ),
-      drawer: ListDrawer(),
+      drawer: SideDrawer(),
       body: Container(
         child: _buildList(),
       ),

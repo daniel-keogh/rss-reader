@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:rssreader/components/settings_section.dart';
+import 'package:rssreader/screens/settings/settings_section.dart';
 import 'package:rssreader/providers/theme_changer.dart';
 
 class SettingsScreen extends StatelessWidget {

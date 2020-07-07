@@ -20,13 +20,16 @@ class ArticleItem extends StatelessWidget {
         child: Text(
           article.title,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.w500,
             color: article.isRead ? Colors.grey : null,
           ),
         ),
       ),
-      subtitle: Text(article.publisher),
+      subtitle: Text(
+        article.publisher,
+        style: TextStyle(fontSize: 12),
+      ),
       leading:
           article.imageUrl != null ? Image.network(article.imageUrl) : null,
       onTap: handleTap,

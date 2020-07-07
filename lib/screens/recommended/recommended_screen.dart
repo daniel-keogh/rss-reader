@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/components/search_item.dart';
+import 'package:rssreader/screens/recommended/search_item.dart';
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/services/networking.dart';

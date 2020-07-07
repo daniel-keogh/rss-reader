@@ -1,8 +1,8 @@
 class CatalogPhoto {
-  String asset;
-  String title;
+  final String asset;
+  final String title;
 
-  CatalogPhoto({
+  const CatalogPhoto({
     this.asset,
     this.title,
   });

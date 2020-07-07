@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:rssreader/providers/theme_changer.dart';
 import 'package:rssreader/services/prefs.dart';
 import 'package:rssreader/theme/style.dart';
-import 'package:rssreader/screens/home_screen.dart';
-import 'package:rssreader/screens/catalog_screen.dart';
-import 'package:rssreader/screens/sources_screen.dart';
-import 'package:rssreader/screens/settings_screen.dart';
+import 'package:rssreader/screens/home/home_screen.dart';
+import 'package:rssreader/screens/catalog/catalog_screen.dart';
+import 'package:rssreader/screens/sources/sources_screen.dart';
+import 'package:rssreader/screens/settings/settings_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
