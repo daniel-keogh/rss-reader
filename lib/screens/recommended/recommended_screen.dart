@@ -7,7 +7,8 @@ import 'package:rssreader/services/networking.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 
 class RecommendedScreen extends StatefulWidget {
-  static const String id = '/recommended';
+  final NetworkHelper nh = NetworkHelper();
+  final SubscriptionsDb db = SubscriptionsDb.getInstance();
 
   final String category;
 
@@ -21,9 +22,7 @@ class RecommendedScreen extends StatefulWidget {
 }
 
 class _RecommendedScreenState extends State<RecommendedScreen> {
-  final NetworkHelper nh = NetworkHelper();
-  final SubscriptionsDb db = SubscriptionsDb.getInstance();
-  final List<String> feeds = [];
+  List<String> _feeds = [];
 
   @override
   void initState() {
@@ -31,11 +30,9 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
     getCurrentSubs();
   }
 
-  Future getCurrentSubs() async {
-    var all = await db.getAll();
-    setState(() {
-      feeds.addAll(all.map((e) => e.xmlUrl));
-    });
+  Future<void> getCurrentSubs() async {
+    var all = await widget.db.getAll();
+    _feeds = all.map((e) => e.xmlUrl).toList();
   }
 
   @override
@@ -46,7 +43,7 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
       ),
       body: Container(
         child: FutureBuilder(
-          future: nh.feedSearch(widget.category),
+          future: widget.nh.feedSearch(widget.category),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               List<SearchResult> data = snapshot.data;
@@ -55,16 +52,18 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
                 itemBuilder: (context, index) {
                   return SearchItem(
                     searchResult: data[index],
-                    isSubscribed: feeds.contains(data[index].xmlUrl),
-                    handleSub: () async {
-                      await db.insert(Subscription(
-                        title: data[index].title,
-                        xmlUrl: data[index].xmlUrl,
-                        category: widget.category,
-                      ));
+                    isSubscribed: _feeds.contains(data[index].xmlUrl),
+                    onSubscribe: () async {
+                      await widget.db.insert(
+                        Subscription(
+                          title: data[index].title,
+                          xmlUrl: data[index].xmlUrl,
+                          category: widget.category,
+                        ),
+                      );
                     },
-                    handleUnsub: () async {
-                      await db.deleteByXmlUrl(data[index].xmlUrl);
+                    onUnsubscribe: () async {
+                      await widget.db.deleteByXmlUrl(data[index].xmlUrl);
                     },
                   );
                 },
