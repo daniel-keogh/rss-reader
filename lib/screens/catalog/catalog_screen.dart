@@ -7,47 +7,19 @@ import 'package:rssreader/screens/recommended/recommended_screen.dart';
 class CatalogScreen extends StatelessWidget {
   static const String route = '/catalog';
 
+  static const String _path = 'assets/catalog';
+
   final List<CatalogPhoto> _photos = [
-    CatalogPhoto(
-      title: "News",
-      asset: "assets/catalog/news.jpg",
-    ),
-    CatalogPhoto(
-      title: "Technology",
-      asset: "assets/catalog/tech.jpg",
-    ),
-    CatalogPhoto(
-      title: "Science & Space",
-      asset: "assets/catalog/science.jpg",
-    ),
-    CatalogPhoto(
-      title: "Business",
-      asset: "assets/catalog/business.jpg",
-    ),
-    CatalogPhoto(
-      title: "Software Development",
-      asset: "assets/catalog/software.jpg",
-    ),
-    CatalogPhoto(
-      title: "DIY",
-      asset: "assets/catalog/diy.jpg",
-    ),
-    CatalogPhoto(
-      title: "Books",
-      asset: "assets/catalog/books.jpg",
-    ),
-    CatalogPhoto(
-      title: "Music",
-      asset: "assets/catalog/music.jpg",
-    ),
-    CatalogPhoto(
-      title: "Gaming",
-      asset: "assets/catalog/gaming.jpg",
-    ),
-    CatalogPhoto(
-      title: "Sport",
-      asset: "assets/catalog/sport.jpg",
-    ),
+    CatalogPhoto(title: "News", asset: "$_path/news.jpg"),
+    CatalogPhoto(title: "Technology", asset: "$_path/tech.jpg"),
+    CatalogPhoto(title: "Science & Space", asset: "$_path/science.jpg"),
+    CatalogPhoto(title: "Business", asset: "$_path/business.jpg"),
+    CatalogPhoto(title: "Software Development", asset: "$_path/software.jpg"),
+    CatalogPhoto(title: "DIY", asset: "$_path/diy.jpg"),
+    CatalogPhoto(title: "Books", asset: "$_path/books.jpg"),
+    CatalogPhoto(title: "Music", asset: "$_path/music.jpg"),
+    CatalogPhoto(title: "Gaming", asset: "$_path/gaming.jpg"),
+    CatalogPhoto(title: "Sport", asset: "$_path/sport.jpg"),
   ];
 
   @override

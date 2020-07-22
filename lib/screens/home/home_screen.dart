@@ -141,19 +141,12 @@ class _FilterButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       onSelected: onSelected,
       itemBuilder: (context) {
-        return <PopupMenuItem<String>>[
-          PopupMenuItem(
-            child: Text('Show all'),
-            value: 'all',
-          ),
-          PopupMenuItem(
-            child: Text('Show all read'),
-            value: 'read',
-          ),
-          PopupMenuItem(
-            child: Text('Show all unread'),
-            value: 'unread',
-          ),
+        return [
+          for (var i in ['All', 'Read', 'Unread'])
+            PopupMenuItem(
+              child: Text(i),
+              value: i.toLowerCase(),
+            ),
         ];
       },
     );
