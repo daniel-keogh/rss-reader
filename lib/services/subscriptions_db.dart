@@ -112,6 +112,21 @@ class SubscriptionsDb {
     return subscription;
   }
 
+  Future<void> insertAll(List<Subscription> subscriptions) async {
+    final db = await database;
+
+    final Batch batch = db.batch();
+
+    subscriptions.forEach((sub) {
+      batch.insert(
+        _TABLE_SUBSCRIPTIONS,
+        sub.toMap(),
+      );
+    });
+
+    await batch.commit(noResult: true);
+  }
+
   Future<int> update(Subscription subscription) async {
     final db = await database;
 
