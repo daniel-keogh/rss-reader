@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rssreader/providers/subscriptions.dart';
 
-import 'package:webfeed/domain/rss_feed.dart';
-import 'package:intl/intl.dart';
-
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/models/article.dart';
@@ -12,7 +9,6 @@ import 'package:rssreader/services/networking.dart';
 
 class HomeScreen extends StatefulWidget {
   final nh = NetworkHelper();
-  final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -28,46 +24,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> refreshFeeds() async {
-    List<RssFeed> result = await widget.nh.loadFeeds();
-
-    result.forEach((feed) {
-      if (feed.items.length > 0) {
-        List<Article> batch = feed.items.map((item) {
-          String img;
-          if (item.media.contents.length > 0) {
-            img = item.media.contents[0].url;
-          } else {
-            img = item.enclosure?.url;
-          }
-
-          return Article(
-            title: item.title,
-            imageUrl: img,
-            isRead: false,
-            publisher: feed.title,
-            url: item.link,
-            date: widget.df.parse(item.pubDate),
-          );
-        }).toList();
-
-        setState(() {
-          feedItems.addAll(batch);
-        });
-      }
-    });
+    List<Article> articles = await widget.nh.loadFeeds();
 
     setState(() {
-      feedItems.sort((a, b) => b.date.compareTo(a.date));
+      feedItems = articles..sort((a, b) => b.date.compareTo(a.date));
     });
   }
 
-  Widget _buildList() {
-    return feedItems.length != 0
+  Widget _buildList(String category) {
+    List<Article> articles;
+
+    if (category == 'All') {
+      articles = feedItems;
+    } else {
+      articles = feedItems.where((e) => e.category == category).toList();
+    }
+
+    return articles.length != 0
         ? Scrollbar(
             child: RefreshIndicator(
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  var article = feedItems[index];
+                  var article = articles[index];
+
                   return ArticleItem(
                     article: article,
                     handleTap: () {
@@ -79,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 separatorBuilder: (context, index) {
                   return Divider(thickness: 0.5);
                 },
-                itemCount: feedItems.length,
+                itemCount: articles.length,
                 padding: EdgeInsets.symmetric(vertical: 10.0),
               ),
               onRefresh: refreshFeeds,
@@ -121,17 +100,23 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text('Home'),
           actions: _appbarActions(),
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: <Widget>[
-              for (final tab in tabs) Tab(text: tab),
-            ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(48.0),
+            child: Container(
+              width: double.infinity,
+              child: TabBar(
+                isScrollable: true,
+                tabs: <Widget>[
+                  for (final tab in tabs) Tab(text: tab),
+                ],
+              ),
+            ),
           ),
         ),
         drawer: SideDrawer(),
         body: TabBarView(
           children: <Widget>[
-            for (final tab in tabs) _buildList(),
+            for (final tab in tabs) _buildList(tab),
           ],
         ),
       ),

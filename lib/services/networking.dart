@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:rssreader/models/article.dart';
 import 'package:webfeed/webfeed.dart';
 
 import 'package:rssreader/models/search_result.dart';
@@ -11,20 +13,44 @@ class NetworkHelper {
   final _client = http.Client();
   final _db = SubscriptionsDb.getInstance();
 
-  Future<List<RssFeed>> loadFeeds() async {
+  Future<List<Article>> loadFeeds() async {
+    final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
+
     List<Subscription> subscriptions = await _db.getAll();
 
-    List<RssFeed> feeds = [];
+    List<Article> articles = [];
+
     for (var sub in subscriptions) {
       try {
         final response = await _client.get(sub.xmlUrl);
-        feeds.add(RssFeed.parse(response.body));
+        RssFeed feed = RssFeed.parse(response.body);
+
+        List<Article> batch = feed.items.map((item) {
+          String img;
+          if (item.media.contents.length > 0) {
+            img = item.media.contents[0].url;
+          } else {
+            img = item.enclosure?.url;
+          }
+
+          return Article(
+            title: item.title,
+            imageUrl: img,
+            isRead: false,
+            publisher: feed.title,
+            url: item.link,
+            date: df.parse(item.pubDate),
+            category: sub.category,
+          );
+        }).toList();
+
+        articles.addAll(batch);
       } catch (e) {
         print(e);
       }
     }
 
-    return feeds;
+    return articles;
   }
 
   Future<List<SearchResult>> feedSearch(
