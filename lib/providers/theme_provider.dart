@@ -7,10 +7,10 @@ enum ActiveTheme {
   dark,
 }
 
-class ThemeChanger extends ChangeNotifier {
+class ThemeProvider extends ChangeNotifier {
   ActiveTheme _theme;
 
-  ThemeChanger(this._theme);
+  ThemeProvider(this._theme);
 
   get theme {
     return _theme;

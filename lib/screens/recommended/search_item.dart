@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/providers/subscriptions.dart';
+import 'package:rssreader/providers/subscriptions_provider.dart';
 
 class SearchItem extends StatelessWidget {
   final SearchResult searchResult;

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/providers/subscriptions.dart';
+import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/screens/catalog/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/utils/routes.dart';

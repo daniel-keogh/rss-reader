@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:rssreader/screens/settings/settings_section.dart';
-import 'package:rssreader/providers/theme_changer.dart';
+import 'package:rssreader/providers/theme_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _themeChanger = Provider.of<ThemeChanger>(context);
+    var _themeChanger = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(

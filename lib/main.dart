@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:rssreader/providers/subscriptions.dart';
-import 'package:rssreader/providers/theme_changer.dart';
+import 'package:rssreader/providers/subscriptions_provider.dart';
+import 'package:rssreader/providers/theme_provider.dart';
 import 'package:rssreader/services/prefs.dart';
 import 'package:rssreader/theme/style.dart';
 import 'package:rssreader/screens/home/home_screen.dart';
@@ -36,13 +36,13 @@ class RssReader extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ThemeChanger(activeTheme)),
+        ChangeNotifierProvider(create: (context) => ThemeProvider(activeTheme)),
         ChangeNotifierProvider(create: (context) => SubscriptionsProvider()),
       ],
       child: Builder(
         builder: (context) => MaterialApp(
           title: RssReader._title,
-          theme: Provider.of<ThemeChanger>(context).theme == ActiveTheme.light
+          theme: Provider.of<ThemeProvider>(context).theme == ActiveTheme.light
               ? Style.getThemeData()
               : Style.getDarkThemeData(),
           initialRoute: Routes.home,

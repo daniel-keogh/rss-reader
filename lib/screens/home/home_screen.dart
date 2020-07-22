@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rssreader/providers/subscriptions.dart';
+import 'package:rssreader/providers/subscriptions_provider.dart';
 
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
