@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/screens/settings/settings_screen.dart';
-import 'package:rssreader/screens/sources/sources_screen.dart';
 import 'package:rssreader/utils/routes.dart';
 
 class SideDrawer extends StatelessWidget {

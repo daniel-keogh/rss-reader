@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rssreader/providers/subscriptions.dart';
 
 import 'package:webfeed/domain/rss_feed.dart';
 import 'package:intl/intl.dart';
@@ -110,14 +112,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: _appbarActions(),
-      ),
-      drawer: SideDrawer(),
-      body: Container(
-        child: _buildList(),
+    final categories = Provider.of<SubscriptionsProvider>(context).categories;
+    final tabs = ['All', ...categories];
+
+    return DefaultTabController(
+      length: categories.length + 1,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+          actions: _appbarActions(),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: <Widget>[
+              for (final tab in tabs) Tab(text: tab),
+            ],
+          ),
+        ),
+        drawer: SideDrawer(),
+        body: TabBarView(
+          children: <Widget>[
+            for (final tab in tabs) _buildList(),
+          ],
+        ),
       ),
     );
   }
