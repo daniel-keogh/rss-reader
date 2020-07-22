@@ -10,6 +10,7 @@ import 'package:rssreader/screens/home/home_screen.dart';
 import 'package:rssreader/screens/catalog/catalog_screen.dart';
 import 'package:rssreader/screens/sources/sources_screen.dart';
 import 'package:rssreader/screens/settings/settings_screen.dart';
+import 'package:rssreader/utils/routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,12 +45,12 @@ class RssReader extends StatelessWidget {
           theme: Provider.of<ThemeChanger>(context).theme == ActiveTheme.light
               ? Style.getThemeData()
               : Style.getDarkThemeData(),
-          initialRoute: HomeScreen.route,
+          initialRoute: Routes.home,
           routes: {
-            HomeScreen.route: (context) => HomeScreen(),
-            CatalogScreen.route: (context) => CatalogScreen(),
-            SourcesScreen.route: (context) => SourcesScreen(),
-            SettingsScreen.route: (context) => SettingsScreen(),
+            Routes.home: (context) => HomeScreen(),
+            Routes.catalog: (context) => CatalogScreen(),
+            Routes.sources: (context) => SourcesScreen(),
+            Routes.settings: (context) => SettingsScreen(),
           },
         ),
       ),

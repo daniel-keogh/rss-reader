@@ -6,8 +6,6 @@ import 'package:rssreader/screens/settings/settings_section.dart';
 import 'package:rssreader/providers/theme_changer.dart';
 
 class SettingsScreen extends StatelessWidget {
-  static const String route = '/settings';
-
   @override
   Widget build(BuildContext context) {
     var _themeChanger = Provider.of<ThemeChanger>(context);

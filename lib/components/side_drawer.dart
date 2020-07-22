@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:rssreader/screens/settings/settings_screen.dart';
 import 'package:rssreader/screens/sources/sources_screen.dart';
+import 'package:rssreader/utils/routes.dart';
 
 class SideDrawer extends StatelessWidget {
   @override
@@ -24,7 +25,7 @@ class SideDrawer extends StatelessWidget {
               title: Text('Sources'),
               leading: Icon(Icons.library_add),
               onTap: () {
-                Navigator.popAndPushNamed(context, SourcesScreen.route);
+                Navigator.popAndPushNamed(context, Routes.sources);
               },
             ),
             Divider(),
@@ -32,7 +33,7 @@ class SideDrawer extends StatelessWidget {
               title: Text('Settings'),
               leading: Icon(Icons.settings),
               onTap: () {
-                Navigator.popAndPushNamed(context, SettingsScreen.route);
+                Navigator.popAndPushNamed(context, Routes.settings);
               },
             ),
             AboutListTile(

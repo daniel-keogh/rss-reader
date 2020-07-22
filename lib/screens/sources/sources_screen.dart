@@ -8,10 +8,9 @@ import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions.dart';
 import 'package:rssreader/screens/catalog/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
+import 'package:rssreader/utils/routes.dart';
 
 class SourcesScreen extends StatelessWidget {
-  static const String route = '/sources';
-
   SnackBar _getSnackBar(String text) {
     return SnackBar(
       content: Text(text),
@@ -63,7 +62,7 @@ class SourcesScreen extends StatelessWidget {
                 title: Text("Search"),
                 onTap: () {
                   Navigator.of(context).pushReplacementNamed(
-                    CatalogScreen.route,
+                    Routes.catalog,
                   );
                 },
               ),
