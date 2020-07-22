@@ -2,39 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:rssreader/models/subscription.dart';
+import 'package:rssreader/providers/subscriptions.dart';
 import 'package:rssreader/screens/catalog/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
-import 'package:rssreader/services/subscriptions_db.dart';
 
-class SourcesScreen extends StatefulWidget {
+class SourcesScreen extends StatelessWidget {
   static const String route = '/sources';
-
-  final _opml = Opml();
-  final _subsDb = SubscriptionsDb.getInstance();
-
-  @override
-  _SourcesScreenState createState() => _SourcesScreenState();
-}
-
-class _SourcesScreenState extends State<SourcesScreen> {
-  List<Subscription> subscriptions = [];
-  Set<String> categories = {};
-
-  @override
-  void initState() {
-    super.initState();
-    loadSubscriptions();
-  }
-
-  void loadSubscriptions() async {
-    var subs = await widget._subsDb.getAll();
-
-    setState(() {
-      subscriptions.addAll(subs);
-      categories = Set.from(subs.map((e) => e.category));
-    });
-  }
 
   SnackBar _getSnackBar(String text) {
     return SnackBar(
@@ -54,7 +30,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
           icon: Icon(Icons.save_alt),
           tooltip: 'Export',
           onPressed: () async {
-            File file = await widget._opml.export();
+            File file = await Opml.export();
 
             if (file != null) {
               var msg = "File exported to: '${file.path}'";
@@ -94,8 +70,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
               ListTile(
                 leading: Icon(Icons.attach_file),
                 title: Text("Import OPML file"),
-                onTap: () {
-                  widget._opml.import();
+                onTap: () async {
+                  List<Subscription> subs = await Opml.import();
+
+                  Provider.of<SubscriptionsProvider>(
+                    context,
+                    listen: false,
+                  ).addAll(subs);
+
                   Navigator.pop(context);
                 },
               ),
@@ -111,19 +93,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sources'),
-        actions: _appbarActions(),
-      ),
-      body: Container(
+  Widget _buildBody() {
+    return Consumer<SubscriptionsProvider>(
+      builder: (context, value, child) => Container(
         child: ListView.separated(
           itemBuilder: (context, index) {
-            String category = categories.elementAt(index);
+            String category = value.categories.elementAt(index);
 
-            List<ListTile> items = subscriptions
+            List<ListTile> items = value.subscriptions
                 .where((e) => e.category == category)
                 .map(
                   (e) => ListTile(
@@ -145,13 +122,23 @@ class _SourcesScreenState extends State<SourcesScreen> {
             );
           },
           separatorBuilder: (context, index) => Divider(thickness: 0.5),
-          itemCount: categories.length,
+          itemCount: value.categories.length,
           padding: EdgeInsets.symmetric(vertical: 10.0),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("Add"),
-        icon: Icon(Icons.add),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Sources'),
+        actions: _appbarActions(),
+      ),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
         onPressed: () => _showModalBottomSheet(context),
       ),
     );

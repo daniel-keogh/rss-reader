@@ -1,81 +1,64 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/models/search_result.dart';
+import 'package:provider/provider.dart';
 
-class SearchItem extends StatefulWidget {
+import 'package:rssreader/models/search_result.dart';
+import 'package:rssreader/models/subscription.dart';
+import 'package:rssreader/providers/subscriptions.dart';
+
+class SearchItem extends StatelessWidget {
   final SearchResult searchResult;
-  final bool isSubscribed;
-  final Function onSubscribe;
-  final Function onUnsubscribe;
+  final String category;
 
   SearchItem({
     Key key,
     @required this.searchResult,
-    @required this.isSubscribed,
-    @required this.onSubscribe,
-    @required this.onUnsubscribe,
+    @required this.category,
   }) : super(key: key);
 
   @override
-  _SearchItemState createState() => _SearchItemState();
-}
-
-class _SearchItemState extends State<SearchItem> {
-  bool isSubscribed;
-
-  @override
-  void initState() {
-    super.initState();
-    isSubscribed = widget.isSubscribed;
-  }
-
-  void toggleIsSubscribed() {
-    setState(() {
-      isSubscribed = !isSubscribed;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Padding(
-        padding: EdgeInsets.only(bottom: 6.0),
-        child: Text(
-          widget.searchResult.title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+    return Consumer<SubscriptionsProvider>(
+      builder: (context, value, child) => ListTile(
+        title: Padding(
+          padding: EdgeInsets.only(bottom: 6.0),
+          child: Text(
+            searchResult.title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
-      ),
-      subtitle: widget.searchResult.website != null
-          ? Text(Uri.parse(widget.searchResult.website).host)
-          : null,
-      leading: widget.searchResult.publisherImg != null
-          ? CircleAvatar(
-              backgroundImage: NetworkImage(
-                widget.searchResult.publisherImg,
+        subtitle: searchResult.website != null
+            ? Text(Uri.parse(searchResult.website).host)
+            : null,
+        leading: searchResult.publisherImg != null
+            ? CircleAvatar(
+                backgroundImage: NetworkImage(
+                  searchResult.publisherImg,
+                ),
+                backgroundColor: Colors.transparent,
+              )
+            : null,
+        trailing: !value.isSubscribed(searchResult.xmlUrl)
+            ? IconButton(
+                icon: Icon(Icons.add_circle),
+                color: Colors.blueAccent,
+                onPressed: () => value.add(
+                  Subscription(
+                    title: searchResult.title,
+                    xmlUrl: searchResult.xmlUrl,
+                    category: category,
+                  ),
+                ),
+              )
+            : IconButton(
+                icon: Icon(Icons.check_circle),
+                color: Colors.redAccent,
+                onPressed: () => value.deleteByXmlUrl(searchResult.xmlUrl),
               ),
-              backgroundColor: Colors.transparent,
-            )
-          : null,
-      trailing: !isSubscribed
-          ? IconButton(
-              icon: Icon(Icons.add_circle),
-              color: Colors.blueAccent,
-              onPressed: () {
-                widget.onSubscribe();
-                toggleIsSubscribed();
-              },
-            )
-          : IconButton(
-              icon: Icon(Icons.check_circle),
-              color: Colors.redAccent,
-              onPressed: () {
-                widget.onUnsubscribe();
-                toggleIsSubscribed();
-              },
-            ),
+      ),
     );
   }
 }

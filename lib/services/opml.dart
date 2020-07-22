@@ -9,9 +9,8 @@ import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 
 class Opml {
-  static final _db = SubscriptionsDb.getInstance();
-
-  Future<File> export() async {
+  static Future<File> export() async {
+    final _db = SubscriptionsDb.getInstance();
     List<Subscription> subscriptions = await _db.getAll();
 
     final builder = XmlBuilder();
@@ -66,7 +65,7 @@ class Opml {
     return await _writeXmlToFile(xml);
   }
 
-  Future<File> _writeXmlToFile(XmlNode xml) async {
+  static Future<File> _writeXmlToFile(XmlNode xml) async {
     final directory = await getExternalStorageDirectory();
 
     final df = DateFormat('yyyy-MM-dd');
@@ -82,7 +81,9 @@ class Opml {
     );
   }
 
-  Future<void> import() async {
+  static Future<List<Subscription>> import() async {
+    final List<Subscription> imported = [];
+
     File file = await FilePicker.getFile(
       type: FileType.custom,
       allowedExtensions: ['bin', 'xml'],
@@ -101,7 +102,7 @@ class Opml {
           orElse: () => null,
         );
 
-        outline.findElements('outline').forEach((item) async {
+        outline.findElements('outline').forEach((item) {
           Map<String, String> attributes = {};
 
           item.attributes.forEach(
@@ -109,24 +110,20 @@ class Opml {
           );
 
           if (attributes['type'] == 'rss') {
-            try {
-              await _db.insert(
-                Subscription(
-                  title: attributes['text'] ?? attributes['title'],
-                  category: category?.value ?? 'Uncategorized',
-                  xmlUrl: attributes['xmlUrl'],
-                ),
-              );
-            } catch (e) {
-              // TODO: Handle SQL exception
-              print(e);
-            }
+            imported.add(
+              Subscription(
+                title: attributes['text'] ?? attributes['title'],
+                category: category?.value ?? 'Uncategorized',
+                xmlUrl: attributes['xmlUrl'],
+              ),
+            );
           }
         });
       });
     } catch (e) {
       print(e);
-      return null;
     }
+
+    return imported;
   }
 }
