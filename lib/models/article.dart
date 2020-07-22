@@ -1,5 +1,3 @@
-import 'package:url_launcher/url_launcher.dart';
-
 class Article {
   final String title;
   final String url;
@@ -18,12 +16,6 @@ class Article {
     this.date,
     this.isRead,
   });
-
-  Future view() async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    }
-  }
 
   @override
   String toString() {

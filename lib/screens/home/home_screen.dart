@@ -5,6 +5,7 @@ import 'package:rssreader/providers/subscriptions.dart';
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/models/article.dart';
+import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:rssreader/services/networking.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -50,7 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ArticleItem(
                     article: article,
                     handleTap: () {
-                      article.view();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WebViewScreen(
+                            article: article,
+                          ),
+                        ),
+                      );
+
                       setState(() => article.isRead = true);
                     },
                   );
