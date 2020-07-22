@@ -8,8 +8,6 @@ import 'package:rssreader/providers/theme_provider.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _themeChanger = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
@@ -20,14 +18,15 @@ class SettingsScreen extends StatelessWidget {
             SettingsSection(
               title: "Appearance",
               listTiles: <Widget>[
-                SwitchListTile(
-                  title: Text("Dark theme"),
-                  secondary: Icon(Icons.brightness_4),
-                  value: _themeChanger.theme == ActiveTheme.dark,
-                  onChanged: (value) {
-                    _themeChanger.theme =
-                        value ? ActiveTheme.dark : ActiveTheme.light;
-                  },
+                Consumer<ThemeProvider>(
+                  builder: (context, prov, child) => SwitchListTile(
+                    title: Text("Dark theme"),
+                    secondary: Icon(Icons.brightness_4),
+                    value: prov.theme == ActiveTheme.dark,
+                    onChanged: (value) {
+                      prov.theme = value ? ActiveTheme.dark : ActiveTheme.light;
+                    },
+                  ),
                 ),
               ],
             ),

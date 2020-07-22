@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/screens/catalog/catalog_screen.dart';
 import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/utils/routes.dart';
 
@@ -94,7 +93,7 @@ class SourcesScreen extends StatelessWidget {
 
   Widget _buildBody() {
     return Consumer<SubscriptionsProvider>(
-      builder: (context, value, child) => Container(
+      builder: (context, value, child) => Scrollbar(
         child: ListView.separated(
           itemBuilder: (context, index) {
             String category = value.categories.elementAt(index);

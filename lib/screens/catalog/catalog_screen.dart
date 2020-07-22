@@ -33,7 +33,7 @@ class CatalogScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
+      body: Scrollbar(
         child: GridView.count(
           crossAxisCount: 2,
           mainAxisSpacing: 8,
