@@ -17,9 +17,38 @@ class WebViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(article.publisher),
-        actions: <Widget>[
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: WebView(
+          initialUrl: article.url,
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
+      ),
+      bottomNavigationBar: _BottomAppBar(article: article),
+    );
+  }
+}
+
+class _BottomAppBar extends StatelessWidget {
+  final Article article;
+
+  const _BottomAppBar({
+    Key key,
+    @required this.article,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            tooltip: 'Back',
+            onPressed: () => Navigator.pop(context),
+          ),
+          const Spacer(),
           IconButton(
             icon: Icon(Icons.share),
             tooltip: 'Share',
@@ -37,10 +66,6 @@ class WebViewScreen extends StatelessWidget {
             },
           ),
         ],
-      ),
-      body: WebView(
-        initialUrl: article.url,
-        javascriptMode: JavascriptMode.unrestricted,
       ),
     );
   }
