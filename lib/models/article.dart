@@ -32,6 +32,14 @@ class Article implements Comparable<Article> {
   }
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Article && runtimeType == other.runtimeType && url == other.url;
+
+  @override
+  int get hashCode => url.hashCode;
+
+  @override
   int compareTo(Article other) {
     return other.date.compareTo(date);
   }

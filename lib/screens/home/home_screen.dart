@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Article> feedItems = [];
+  final feedItems = HashSet<Article>();
 
   @override
   void initState() {
@@ -26,18 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> refreshFeeds() async {
     await for (final data in widget.nh.loadFeeds()) {
-      setState(() {
-        feedItems
-          ..addAll(data)
-          ..sort();
-      });
+      setState(() => feedItems.addAll(data));
     }
   }
 
   Widget _buildList(String category) {
     final List<Article> articles = feedItems
         .where((e) => category == 'All' || e.category == category)
-        .toList();
+        .toList()
+          ..sort();
 
     return articles.length != 0
         ? Scrollbar(
