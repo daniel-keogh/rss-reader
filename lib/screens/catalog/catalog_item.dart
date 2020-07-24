@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/screens/catalog/catalog_photo.dart';
+import 'package:rssreader/models/catalog_photo.dart';
 
 class CatalogItem extends StatelessWidget {
   final CatalogPhoto photo;
@@ -16,9 +16,9 @@ class CatalogItem extends StatelessWidget {
     return GridTile(
       footer: Material(
         color: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(4),
+        shape: const RoundedRectangleBorder(
+          borderRadius: const BorderRadius.vertical(
+            bottom: const Radius.circular(4),
           ),
         ),
         clipBehavior: Clip.antiAlias,
@@ -36,9 +36,12 @@ class CatalogItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         clipBehavior: Clip.antiAlias,
-        child: Image.asset(
-          photo.asset,
-          fit: BoxFit.cover,
+        child: Hero(
+          tag: photo.title,
+          child: Image.asset(
+            photo.asset,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
