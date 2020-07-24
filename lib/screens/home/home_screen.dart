@@ -35,13 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildList(String category) {
-    List<Article> articles;
-
-    if (category == 'All') {
-      articles = feedItems;
-    } else {
-      articles = feedItems.where((e) => e.category == category).toList();
-    }
+    final List<Article> articles = feedItems
+        .where((e) => category == 'All' || e.category == category)
+        .toList();
 
     return articles.length != 0
         ? Scrollbar(
