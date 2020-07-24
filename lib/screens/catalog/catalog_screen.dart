@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/screens/catalog/catalog_item.dart';
-import 'package:rssreader/screens/recommended/recommended_screen.dart';
+import 'package:rssreader/screens/category/category_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
   static const String _path = 'assets/catalog';
@@ -78,7 +78,7 @@ class CatalogScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RecommendedScreen(
+                      builder: (context) => CategoryScreen(
                         category: photo.title,
                         photo: photo,
                       ),

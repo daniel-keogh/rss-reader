@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/screens/recommended/search_item.dart';
+import 'package:rssreader/screens/category//search_item.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/services/networking.dart';
 import 'package:rssreader/services/subscriptions_db.dart';
 
-class RecommendedScreen extends StatelessWidget {
+class CategoryScreen extends StatelessWidget {
   final NetworkHelper nh = NetworkHelper();
   final SubscriptionsDb db = SubscriptionsDb.getInstance();
 
   final String category;
   final CatalogPhoto photo;
 
-  RecommendedScreen({
+  CategoryScreen({
     Key key,
     @required this.category,
     @required this.photo,
