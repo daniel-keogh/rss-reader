@@ -13,12 +13,10 @@ class NetworkHelper {
   final _client = http.Client();
   final _db = SubscriptionsDb.getInstance();
 
-  Future<List<Article>> loadFeeds() async {
+  Stream<List<Article>> loadFeeds() async* {
     final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
 
     List<Subscription> subscriptions = await _db.getAll();
-
-    List<Article> articles = [];
 
     for (var sub in subscriptions) {
       try {
@@ -44,13 +42,11 @@ class NetworkHelper {
           );
         }).toList();
 
-        articles.addAll(batch);
+        yield batch;
       } catch (e) {
         print(e);
       }
     }
-
-    return articles;
   }
 
   Future<List<SearchResult>> feedSearch(

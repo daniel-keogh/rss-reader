@@ -1,4 +1,4 @@
-class Article {
+class Article implements Comparable<Article> {
   final String title;
   final String url;
   final String imageUrl;
@@ -29,5 +29,10 @@ class Article {
       date: $date,
       isRead: $isRead 
     }""";
+  }
+
+  @override
+  int compareTo(Article other) {
+    return other.date.compareTo(date);
   }
 }
