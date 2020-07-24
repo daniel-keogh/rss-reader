@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rssreader/providers/subscriptions_provider.dart';
 
+import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/models/article.dart';
@@ -25,11 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> refreshFeeds() async {
-    List<Article> articles = await widget.nh.loadFeeds();
-
-    setState(() {
-      feedItems = articles..sort((a, b) => b.date.compareTo(a.date));
-    });
+    await for (final data in widget.nh.loadFeeds()) {
+      setState(() {
+        feedItems
+          ..addAll(data)
+          ..sort();
+      });
+    }
   }
 
   Widget _buildList(String category) {
@@ -65,21 +67,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Divider(thickness: 0.5);
+                  return const Divider(thickness: 0.5);
                 },
                 itemCount: articles.length,
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
               ),
               onRefresh: refreshFeeds,
             ),
           )
-        : Center(child: CircularProgressIndicator());
+        : const Center(
+            child: const CircularProgressIndicator(),
+          );
   }
 
   List<Widget> _appbarActions() {
     return <Widget>[
       IconButton(
-        icon: Icon(Icons.done_all),
+        icon: const Icon(Icons.done_all),
         tooltip: 'Mark all as read',
         onPressed: () {
           setState(() {
@@ -91,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onSelected: (value) {},
       ),
       IconButton(
-        icon: Icon(Icons.search),
+        icon: const Icon(Icons.search),
         tooltip: 'Search',
         onPressed: () {},
       ),
@@ -107,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
       length: categories.length + 1,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: const Text('Home'),
           actions: _appbarActions(),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(48.0),
@@ -144,7 +148,7 @@ class _FilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.filter_list),
+      icon: const Icon(Icons.filter_list),
       tooltip: 'Filter',
       padding: EdgeInsets.zero,
       onSelected: onSelected,
