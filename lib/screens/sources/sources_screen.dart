@@ -10,14 +10,18 @@ import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/utils/routes.dart';
 
 class SourcesScreen extends StatelessWidget {
-  SnackBar _getSnackBar(String text) {
-    return SnackBar(
-      content: Text(text),
-      action: SnackBarAction(
-        onPressed: () {},
-        label: 'OK',
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sources'),
+        actions: _appbarActions(),
       ),
-      duration: Duration(seconds: 5),
+      body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => _showModalBottomSheet(context),
+      ),
     );
   }
 
@@ -25,70 +29,27 @@ class SourcesScreen extends StatelessWidget {
     return <Widget>[
       Builder(
         builder: (context) => IconButton(
-          icon: Icon(Icons.save_alt),
-          tooltip: 'Export',
+          icon: const Icon(Icons.save_alt),
+          tooltip: 'Export OPML',
           onPressed: () async {
             File file = await Opml.export();
 
             if (file != null) {
-              var msg = "File exported to: '${file.path}'";
-              Scaffold.of(context).showSnackBar(_getSnackBar(msg));
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("File exported to: '${file.path}'"),
+                  action: SnackBarAction(
+                    onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                    label: 'OK',
+                  ),
+                  duration: const Duration(seconds: 5),
+                ),
+              );
             }
           },
         ),
       ),
     ];
-  }
-
-  void _showModalBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(10.0),
-        ),
-      ),
-      builder: (context) {
-        return Container(
-          height: 190.0,
-          color: Colors.transparent,
-          child: ListView(
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-            physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.search),
-                title: Text("Search"),
-                onTap: () {
-                  Navigator.of(context).pushReplacementNamed(
-                    Routes.catalog,
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.attach_file),
-                title: Text("Import OPML file"),
-                onTap: () async {
-                  List<Subscription> subs = await Opml.import();
-
-                  Provider.of<SubscriptionsProvider>(
-                    context,
-                    listen: false,
-                  ).addAll(subs);
-
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.link),
-                title: Text("RSS link"),
-                onTap: () {},
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   Widget _buildBody() {
@@ -111,7 +72,7 @@ class SourcesScreen extends StatelessWidget {
                         title: Text(item.title),
                         subtitle: Text(item.xmlUrl),
                         trailing: IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: const Icon(Icons.delete),
                           color: Colors.redAccent,
                           tooltip: 'Unsubscribe',
                           onPressed: () => value.delete(item),
@@ -119,31 +80,64 @@ class SourcesScreen extends StatelessWidget {
                       ),
                   ],
                   shrinkWrap: true,
-                  physics: ScrollPhysics(parent: PageScrollPhysics()),
+                  physics: const ScrollPhysics(
+                    parent: const PageScrollPhysics(),
+                  ),
                 ),
               ],
             );
           },
-          separatorBuilder: (context, index) => Divider(thickness: 0.5),
+          separatorBuilder: (context, index) => const Divider(thickness: 0.5),
           itemCount: value.categories.length,
-          padding: EdgeInsets.symmetric(vertical: 10.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
         ),
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sources'),
-        actions: _appbarActions(),
+  void _showModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.vertical(
+          top: const Radius.circular(10.0),
+        ),
       ),
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _showModalBottomSheet(context),
-      ),
+      builder: (context) {
+        return Container(
+          height: 130.0,
+          color: Colors.transparent,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            physics: const NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.search),
+                title: const Text("Search"),
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed(
+                    Routes.catalog,
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.attach_file),
+                title: const Text("Import OPML file"),
+                onTap: () async {
+                  List<Subscription> subs = await Opml.import();
+
+                  Provider.of<SubscriptionsProvider>(
+                    context,
+                    listen: false,
+                  ).addAll(subs);
+
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
