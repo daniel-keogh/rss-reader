@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:rssreader/services/prefs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum ActiveTheme {
   light,
@@ -10,19 +10,29 @@ enum ActiveTheme {
 class ThemeProvider extends ChangeNotifier {
   ActiveTheme _theme;
 
+  static const String _THEME = "dark-theme";
+
   ThemeProvider(this._theme);
 
-  get theme {
-    return _theme;
+  static Future<ActiveTheme> getPreferredTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      return prefs.getBool(_THEME) ? ActiveTheme.dark : ActiveTheme.light;
+    } catch (_) {
+      return ActiveTheme.light;
+    }
   }
+
+  get theme => _theme;
 
   set theme(ActiveTheme theme) {
     _theme = theme;
 
     notifyListeners();
 
-    Prefs.getInstance().then(
-      (prefs) => prefs.setActiveTheme(_theme),
-    );
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool(_THEME, _theme == ActiveTheme.dark);
+    });
   }
 }
