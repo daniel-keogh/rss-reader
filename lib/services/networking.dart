@@ -14,39 +14,69 @@ class NetworkHelper {
   final _db = SubscriptionsDb.getInstance();
 
   Stream<List<Article>> loadFeeds() async* {
-    final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
+    final List<Subscription> subscriptions = await _db.getAll();
 
-    List<Subscription> subscriptions = await _db.getAll();
-
-    for (var sub in subscriptions) {
+    for (final sub in subscriptions) {
       try {
         final response = await _client.get(sub.xmlUrl);
-        RssFeed feed = RssFeed.parse(response.body);
 
-        List<Article> batch = feed.items.map((item) {
-          String img;
-          if (item.media.contents.length > 0) {
-            img = item.media.contents[0].url;
-          } else {
-            img = item.enclosure?.url;
-          }
-
-          return Article(
-            title: item.title,
-            imageUrl: img,
-            isRead: false,
-            publisher: feed.title,
-            url: item.link,
-            date: df.parse(item.pubDate),
-            category: sub.category,
-          );
-        }).toList();
-
-        yield batch;
+        try {
+          yield _parseRss(response.body, sub);
+        } catch (e) {
+          print("$e: ${sub.title} -- ${sub.xmlUrl}");
+          yield _parseAtom(response.body, sub);
+        }
       } catch (e) {
-        print(e);
+        print("$e: ${sub.title} -- ${sub.xmlUrl}");
       }
     }
+  }
+
+  List<Article> _parseRss(String body, Subscription sub) {
+    final feed = RssFeed.parse(body);
+
+    final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
+
+    return feed.items.map((item) {
+      String img;
+      if (item.media.contents.length > 0) {
+        img = item.media.contents[0].url;
+      } else {
+        img = item.enclosure?.url;
+      }
+
+      return Article(
+        title: item.title,
+        imageUrl: img,
+        isRead: false,
+        publisher: feed.title,
+        url: item.link,
+        date: df.parse(item.pubDate),
+        category: sub.category,
+      );
+    }).toList();
+  }
+
+  List<Article> _parseAtom(String body, Subscription sub) {
+    final feed = AtomFeed.parse(body);
+
+    return feed.items.map((item) {
+      String img;
+
+      if (item.media.contents.length > 0) {
+        img = item.media.contents[0].url;
+      }
+
+      return Article(
+        title: item.title,
+        imageUrl: img,
+        isRead: false,
+        publisher: feed.title,
+        url: item.links[0].href,
+        date: DateTime.parse(item.updated),
+        category: sub.category,
+      );
+    }).toList();
   }
 
   Future<List<SearchResult>> feedSearch(
