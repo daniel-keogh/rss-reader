@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:rssreader/components/search_page.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/screens/catalog/catalog_item.dart';
 import 'package:rssreader/screens/category/category_screen.dart';
@@ -59,7 +60,10 @@ class CatalogScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: 'Search',
-            onPressed: () {},
+            onPressed: () => showSearch(
+              context: context,
+              delegate: SearchPage(),
+            ),
           ),
         ],
       ),
