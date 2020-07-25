@@ -96,26 +96,31 @@ class SourcesScreen extends StatelessWidget {
       builder: (context, value, child) => Scrollbar(
         child: ListView.separated(
           itemBuilder: (context, index) {
-            String category = value.categories.elementAt(index);
-
-            List<ListTile> items = value.subscriptions
-                .where((e) => e.category == category)
-                .map(
-                  (e) => ListTile(
-                    title: Text(e.title),
-                    subtitle: Text(e.xmlUrl),
-                  ),
-                )
-                .toList();
+            final category = value.categories.elementAt(index);
+            final items = value.subscriptions.where(
+              (e) => e.category == category,
+            );
 
             return ExpansionTile(
               title: Text(category),
               children: <Widget>[
                 ListView(
-                  children: <Widget>[...items],
+                  children: <Widget>[
+                    for (final item in items)
+                      ListTile(
+                        title: Text(item.title),
+                        subtitle: Text(item.xmlUrl),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          color: Colors.redAccent,
+                          tooltip: 'Unsubscribe',
+                          onPressed: () => value.delete(item),
+                        ),
+                      ),
+                  ],
                   shrinkWrap: true,
                   physics: ScrollPhysics(parent: PageScrollPhysics()),
-                )
+                ),
               ],
             );
           },

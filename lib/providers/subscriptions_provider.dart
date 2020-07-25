@@ -56,6 +56,10 @@ class SubscriptionsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void delete(Subscription subscription) {
+    deleteByXmlUrl(subscription.xmlUrl);
+  }
+
   void deleteByXmlUrl(String xmlUrl) {
     _subscriptions.removeWhere((e) => e.xmlUrl == xmlUrl);
     _categories = _getCategories();
