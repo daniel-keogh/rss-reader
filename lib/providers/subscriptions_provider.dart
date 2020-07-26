@@ -7,7 +7,6 @@ import 'package:rssreader/services/subscriptions_db.dart';
 
 class SubscriptionsProvider extends ChangeNotifier {
   List<Subscription> _subscriptions = [];
-  Set<String> _categories = {};
 
   final SubscriptionsDb _db = SubscriptionsDb.getInstance();
 
@@ -17,7 +16,6 @@ class SubscriptionsProvider extends ChangeNotifier {
 
   Future<void> _init() async {
     _subscriptions = await _db.getAll();
-    _categories = _getCategories();
 
     notifyListeners();
   }
@@ -27,12 +25,13 @@ class SubscriptionsProvider extends ChangeNotifier {
   }
 
   UnmodifiableListView<String> get categories {
-    return UnmodifiableListView(_categories);
+    return UnmodifiableListView(
+      Set.from(_subscriptions.map((e) => e.category)),
+    );
   }
 
   void add(Subscription sub) {
     _subscriptions.add(sub);
-    _categories = _getCategories();
 
     try {
       _db.insert(sub);
@@ -45,7 +44,6 @@ class SubscriptionsProvider extends ChangeNotifier {
 
   void addAll(List<Subscription> subs) {
     _subscriptions.addAll(subs);
-    _categories = _getCategories();
 
     try {
       _db.insertAll(subs);
@@ -62,7 +60,6 @@ class SubscriptionsProvider extends ChangeNotifier {
 
   void deleteByXmlUrl(String xmlUrl) {
     _subscriptions.removeWhere((e) => e.xmlUrl == xmlUrl);
-    _categories = _getCategories();
 
     try {
       _db.deleteByXmlUrl(xmlUrl);
@@ -75,9 +72,5 @@ class SubscriptionsProvider extends ChangeNotifier {
 
   bool isSubscribed(String xmlUrl) {
     return _subscriptions.map((e) => e.xmlUrl).contains(xmlUrl);
-  }
-
-  Set<String> _getCategories() {
-    return Set.from(_subscriptions.map((e) => e.category));
   }
 }
