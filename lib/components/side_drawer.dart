@@ -18,30 +18,37 @@ class SideDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              title: Text('Sources'),
-              leading: Icon(Icons.library_add),
+              title: const Text('Sources'),
+              leading: const Icon(Icons.library_add),
               onTap: () {
                 Navigator.popAndPushNamed(context, Routes.sources);
               },
             ),
-            Divider(),
             ListTile(
-              title: Text('Settings'),
-              leading: Icon(Icons.settings),
+              title: const Text('Favourites'),
+              leading: const Icon(Icons.favorite_border),
+              onTap: () {
+                Navigator.popAndPushNamed(context, Routes.favourites);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              title: const Text('Settings'),
+              leading: const Icon(Icons.settings),
               onTap: () {
                 Navigator.popAndPushNamed(context, Routes.settings);
               },
             ),
             AboutListTile(
-              icon: Icon(Icons.info_outline),
-              child: Text('About'),
+              icon: const Icon(Icons.info_outline),
+              child: const Text('About'),
               applicationName: 'RSS Reader',
               applicationVersion: '1.0.0',
-              applicationIcon: Icon(Icons.rss_feed),
+              applicationIcon: const Icon(Icons.rss_feed),
               aboutBoxChildren: <Widget>[
-                Text('A Simple RSS Reader.'),
+                const Text('A Simple RSS Reader.'),
               ],
             ),
           ],

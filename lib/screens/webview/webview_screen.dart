@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rssreader/models/favourite.dart';
+import 'package:rssreader/providers/favourites_provider.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,6 +63,23 @@ class _BottomAppBar extends StatelessWidget {
             onPressed: () async {
               await Share.share(article.url);
             },
+          ),
+          Consumer<FavouritesProvider>(
+            builder: (context, model, child) => IconButton(
+              icon: Icon(
+                model.contains(article)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+              ),
+              tooltip: 'Favourite',
+              onPressed: () {
+                if (model.contains(article)) {
+                  model.delete(article);
+                } else {
+                  model.add(article);
+                }
+              },
+            ),
           ),
           IconButton(
             icon: Icon(Icons.open_in_new),
