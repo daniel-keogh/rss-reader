@@ -6,7 +6,7 @@ import 'package:xml/xml.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/services/subscriptions_db.dart';
+import 'package:rssreader/db/subscriptions_db.dart';
 
 class Opml {
   static Future<File> export() async {

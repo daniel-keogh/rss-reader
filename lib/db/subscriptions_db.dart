@@ -49,7 +49,7 @@ class SubscriptionsDb {
     );
   }
 
-  Future<List<Subscription>> getAll() async {
+  Future<Iterable<Subscription>> getAll() async {
     final db = await database;
 
     var subs = await db.query(
@@ -63,6 +63,7 @@ class SubscriptionsDb {
     );
 
     var subsList = List<Subscription>();
+
     subs.forEach((element) {
       Subscription sub = Subscription.fromMap(element);
       subsList.add(sub);
@@ -112,7 +113,7 @@ class SubscriptionsDb {
     return subscription;
   }
 
-  Future<void> insertAll(List<Subscription> subscriptions) async {
+  Future<void> insertAll(Iterable<Subscription> subscriptions) async {
     final db = await database;
 
     final Batch batch = db.batch();

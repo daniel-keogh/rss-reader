@@ -11,12 +11,13 @@ class Subscription {
     this.xmlUrl,
   });
 
-  Subscription.fromMap(Map<String, dynamic> map) {
-    id = map["id"];
-    title = map["title"];
-    category = map["category"];
-    xmlUrl = map["xmlUrl"];
-  }
+  Subscription.fromMap(Map<String, dynamic> map)
+      : this(
+          id: map["id"],
+          title: map["title"],
+          category: map["category"],
+          xmlUrl: map["xmlUrl"],
+        );
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{

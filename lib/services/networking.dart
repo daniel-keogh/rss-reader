@@ -5,9 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:rssreader/models/article.dart';
 import 'package:webfeed/webfeed.dart';
 
+import 'package:rssreader/db/subscriptions_db.dart';
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/services/subscriptions_db.dart';
 
 class NetworkHelper {
   final _client = http.Client();

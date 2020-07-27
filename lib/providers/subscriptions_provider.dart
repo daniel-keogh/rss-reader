@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 
 import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/services/subscriptions_db.dart';
+import 'package:rssreader/db/subscriptions_db.dart';
 
 class SubscriptionsProvider extends ChangeNotifier {
   List<Subscription> _subscriptions = [];
