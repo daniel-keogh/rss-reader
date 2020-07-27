@@ -8,7 +8,7 @@ import 'package:rssreader/db/subscriptions_db.dart';
 class SubscriptionsProvider extends ChangeNotifier {
   List<Subscription> _subscriptions = [];
 
-  final SubscriptionsDb _db = SubscriptionsDb.getInstance();
+  final _db = SubscriptionsDb();
 
   SubscriptionsProvider() {
     _init();

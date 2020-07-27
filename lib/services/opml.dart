@@ -10,7 +10,7 @@ import 'package:rssreader/db/subscriptions_db.dart';
 
 class Opml {
   static Future<File> export() async {
-    final _db = SubscriptionsDb.getInstance();
+    final _db = SubscriptionsDb();
     List<Subscription> subscriptions = await _db.getAll();
 
     final builder = XmlBuilder();

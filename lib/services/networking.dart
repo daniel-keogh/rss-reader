@@ -11,7 +11,7 @@ import 'package:rssreader/models/subscription.dart';
 
 class NetworkHelper {
   final _client = http.Client();
-  final _db = SubscriptionsDb.getInstance();
+  final _db = SubscriptionsDb();
 
   Stream<List<Article>> loadFeeds() async* {
     final List<Subscription> subscriptions = await _db.getAll();
