@@ -7,7 +7,7 @@ import 'package:rssreader/models/article.dart';
 import 'package:rssreader/models/favourite.dart';
 
 class FavouritesProvider extends ChangeNotifier {
-  Set<Favourite> _favourites = HashSet();
+  Set<Favourite> _favourites = HashSet<Favourite>();
 
   final _db = FavouritesDb();
 
@@ -16,7 +16,7 @@ class FavouritesProvider extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    _favourites = (await _db.getAll()).toSet();
+    _favourites.addAll(await _db.getAll());
 
     notifyListeners();
   }
@@ -26,34 +26,38 @@ class FavouritesProvider extends ChangeNotifier {
   }
 
   void add(Article article) {
-    final fav = Favourite(article: article);
+    final fav = Favourite.fromArticle(article);
 
-    _favourites.add(fav);
+    if (_favourites.add(fav)) {
+      try {
+        _db.insert(fav);
+      } catch (e) {
+        print(e);
+      }
 
-    try {
-      _db.insert(fav);
-    } catch (e) {
-      print(e);
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   bool contains(Article article) {
-    return _favourites.where((e) => e.article == article).length > 0;
+    return _favourites.contains(
+      Favourite.fromArticle(article),
+    );
   }
 
   void delete(Article article) {
-    final fav = _favourites.firstWhere((e) => e.article == article);
+    final fav = _favourites.lookup(
+      Favourite.fromArticle(article),
+    );
 
-    _favourites.remove(fav);
+    if (_favourites.remove(fav)) {
+      try {
+        _db.deleteById(fav.id);
+      } catch (e) {
+        print(e);
+      }
 
-    try {
-      _db.deleteById(fav.id);
-    } catch (e) {
-      print(e);
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 }

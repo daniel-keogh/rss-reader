@@ -11,7 +11,8 @@ class FavouritesDb {
   static const String _COLUMN_ID = "id";
   static const String _COLUMN_TITLE = "title";
   static const String _COLUMN_IMAGE = "imageUrl";
-  static const String _COLUMN_URL = "publisher";
+  static const String _COLUMN_URL = "url";
+  static const String _COLUMN_PUBLISHER = "publisher";
   static const String _COLUMN_DATE = "date";
 
   Future<Iterable<Favourite>> getAll() async {
@@ -24,11 +25,12 @@ class FavouritesDb {
         _COLUMN_TITLE,
         _COLUMN_IMAGE,
         _COLUMN_URL,
+        _COLUMN_PUBLISHER,
         _COLUMN_DATE,
       ],
     );
 
-    var favList = List<Favourite>();
+    final favList = List<Favourite>();
 
     favs.forEach((element) {
       Favourite fav = Favourite.fromMap(element);
@@ -48,6 +50,7 @@ class FavouritesDb {
         _COLUMN_TITLE,
         _COLUMN_IMAGE,
         _COLUMN_URL,
+        _COLUMN_PUBLISHER,
         _COLUMN_DATE,
       ],
       where: '$_COLUMN_ID = ?',

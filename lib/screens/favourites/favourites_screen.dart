@@ -21,9 +21,9 @@ class FavouritesScreen extends StatelessWidget {
 
           return ListView.builder(
             itemBuilder: (context, index) => ListTile(
-              title: Text(favs[index].article.title),
+              title: Text(favs[index].title),
             ),
-            itemCount: model.favourites.length,
+            itemCount: favs.length,
           );
         },
       ),
