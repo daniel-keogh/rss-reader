@@ -98,44 +98,46 @@ class SourcesScreen extends StatelessWidget {
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: const BorderRadius.vertical(
           top: const Radius.circular(10.0),
         ),
       ),
       builder: (context) {
-        return Container(
-          height: 130.0,
-          color: Colors.transparent,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            physics: const NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.search),
-                title: const Text("Search"),
-                onTap: () {
-                  Navigator.of(context).pushReplacementNamed(
-                    Routes.catalog,
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.attach_file),
-                title: const Text("Import OPML file"),
-                onTap: () async {
-                  List<Subscription> subs = await Opml.import();
+        return Wrap(
+          children: <Widget>[
+            ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              physics: const NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.search),
+                  title: const Text("Search"),
+                  onTap: () {
+                    Navigator.of(context).pushReplacementNamed(
+                      Routes.catalog,
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.attach_file),
+                  title: const Text("Import OPML file"),
+                  onTap: () async {
+                    List<Subscription> subs = await Opml.import();
 
-                  Provider.of<SubscriptionsProvider>(
-                    context,
-                    listen: false,
-                  ).addAll(subs);
+                    Provider.of<SubscriptionsProvider>(
+                      context,
+                      listen: false,
+                    ).addAll(subs);
 
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+          ],
         );
       },
     );

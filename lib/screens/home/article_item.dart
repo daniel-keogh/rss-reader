@@ -5,11 +5,13 @@ import 'package:rssreader/models/article.dart';
 class ArticleItem extends StatelessWidget {
   final Article article;
   final Function handleTap;
+  final Function handleLongPress;
 
-  const ArticleItem({
+  ArticleItem({
     Key key,
     @required this.article,
     @required this.handleTap,
+    @required this.handleLongPress,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class ArticleItem extends StatelessWidget {
       leading:
           article.imageUrl != null ? Image.network(article.imageUrl) : null,
       onTap: handleTap,
+      onLongPress: handleLongPress,
     );
   }
 }

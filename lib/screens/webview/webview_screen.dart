@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rssreader/models/favourite.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';

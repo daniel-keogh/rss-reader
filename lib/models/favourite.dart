@@ -2,13 +2,7 @@ import 'package:rssreader/models/article.dart';
 
 class Favourite {
   int id;
-  Article _article;
-
-  String get title => _article.title;
-  String get url => _article.url;
-  String get imageUrl => _article.imageUrl;
-  String get publisher => _article.publisher;
-  String get date => _article.date.toIso8601String();
+  Article article;
 
   Favourite({
     this.id,
@@ -18,7 +12,7 @@ class Favourite {
     String publisher,
     String date,
   }) {
-    _article = Article(
+    article = Article(
       title: title,
       url: url,
       imageUrl: imageUrl,
@@ -38,7 +32,7 @@ class Favourite {
 
   Favourite.fromMap(Map<String, dynamic> map) {
     id = map["id"];
-    _article = Article(
+    article = Article(
       title: map["title"],
       url: map["url"],
       imageUrl: map["imageUrl"],
@@ -49,11 +43,11 @@ class Favourite {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      "title": title,
-      "url": url,
-      "imageUrl": imageUrl,
-      "publisher": publisher,
-      "date": date,
+      "title": article.title,
+      "url": article.url,
+      "imageUrl": article.imageUrl,
+      "publisher": article.publisher,
+      "date": article.date.toIso8601String(),
     };
 
     if (id != null) {
@@ -68,11 +62,11 @@ class Favourite {
     return """
     {
       id: $id,
-      title: $title, 
-      url: $url,
-      imageUrl: $imageUrl,
-      publisher: $publisher,
-      date: $date
+      title: ${article.title}, 
+      url: ${article.url},
+      imageUrl: ${article.imageUrl},
+      publisher: ${article.publisher},
+      date: ${article.date.toIso8601String()}
     }""";
   }
 
@@ -81,8 +75,8 @@ class Favourite {
       identical(this, other) ||
       other is Favourite &&
           runtimeType == other.runtimeType &&
-          _article == other._article;
+          article == other.article;
 
   @override
-  int get hashCode => _article.hashCode;
+  int get hashCode => article.hashCode;
 }
