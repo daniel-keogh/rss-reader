@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rssreader/providers/favourites_provider.dart';
 
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
+import 'package:rssreader/providers/favourites_provider.dart';
 import 'package:rssreader/models/article.dart';
 
 class WebViewScreen extends StatelessWidget {
@@ -24,6 +24,8 @@ class WebViewScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: WebView(
+          key: UniqueKey(),
+          debuggingEnabled: false,
           initialUrl: article.url,
           javascriptMode: JavascriptMode.unrestricted,
           gestureRecognizers: [
