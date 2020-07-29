@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:rssreader/models/article.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
+import 'package:rssreader/screens/webview/webview_screen.dart';
 
 class ArticleBottomSheet extends StatelessWidget {
   final Article article;
@@ -19,7 +19,6 @@ class ArticleBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<FavouritesProvider>(context, listen: false);
-    final bool isFav = model.contains(article);
 
     return Wrap(
       children: <Widget>[
@@ -53,23 +52,24 @@ class ArticleBottomSheet extends StatelessWidget {
                 }
               },
             ),
-            ListTile(
-              leading: Icon(
-                isFav ? Icons.favorite : Icons.favorite_border,
-              ),
-              title: Text(
-                isFav ? "Unfavourite" : "Favourite",
-              ),
-              onTap: () {
-                Navigator.pop(context);
-
-                if (isFav) {
-                  model.delete(article);
-                } else {
+            if (!model.contains(article))
+              ListTile(
+                leading: const Icon(Icons.favorite_border),
+                title: const Text("Favourite"),
+                onTap: () {
+                  Navigator.pop(context);
                   model.add(article);
-                }
-              },
-            ),
+                },
+              )
+            else
+              ListTile(
+                leading: const Icon(Icons.favorite),
+                title: const Text("Unfavourite"),
+                onTap: () {
+                  Navigator.pop(context);
+                  model.delete(article);
+                },
+              ),
             ListTile(
               leading: const Icon(Icons.share),
               title: const Text("Share"),

@@ -66,21 +66,21 @@ class _BottomAppBar extends StatelessWidget {
             },
           ),
           Consumer<FavouritesProvider>(
-            builder: (context, model, child) => IconButton(
-              icon: Icon(
-                model.contains(article)
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-              ),
-              tooltip: 'Favourite',
-              onPressed: () {
-                if (model.contains(article)) {
-                  model.delete(article);
-                } else {
-                  model.add(article);
-                }
-              },
-            ),
+            builder: (context, model, child) {
+              if (!model.contains(article)) {
+                return IconButton(
+                  icon: Icon(Icons.favorite),
+                  tooltip: 'Favourite',
+                  onPressed: () => model.delete(article),
+                );
+              } else {
+                return IconButton(
+                  icon: Icon(Icons.favorite_border),
+                  tooltip: 'Unfavourite',
+                  onPressed: () => model.add(article),
+                );
+              }
+            },
           ),
           IconButton(
             icon: Icon(Icons.open_in_new),
