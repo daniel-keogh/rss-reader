@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'package:rssreader/providers/favourites_provider.dart';
+import 'package:rssreader/utils/constants.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/components/side_drawer.dart';
-import 'package:rssreader/screens/home/article_bottom_sheet.dart';
+import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/models/article.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
@@ -69,11 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.vertical(
-                            top: const Radius.circular(10.0),
-                          ),
-                        ),
+                        shape: bottomSheetShape,
                         builder: (context) => ArticleBottomSheet(
                           article: article,
                         ),

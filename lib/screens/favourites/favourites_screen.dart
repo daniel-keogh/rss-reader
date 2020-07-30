@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/favourite.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
-import 'package:rssreader/screens/home/article_bottom_sheet.dart';
+import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
+import 'package:rssreader/utils/constants.dart';
 
 class FavouritesScreen extends StatelessWidget {
   final GlobalKey<AnimatedListState> _globalKey = GlobalKey();
@@ -150,11 +151,7 @@ class _ListItem extends StatelessWidget {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: const BorderRadius.vertical(
-                top: const Radius.circular(10.0),
-              ),
-            ),
+            shape: bottomSheetShape,
             builder: (context) => ArticleBottomSheet(
               article: favourite.article,
               onUnfavourite: onDelete,

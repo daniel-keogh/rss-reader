@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
+import 'package:rssreader/screens/sources/popup_list.dart';
 
 class SourcesListScreen extends StatelessWidget {
   final String category;
@@ -36,18 +37,26 @@ class SourcesListScreen extends StatelessWidget {
                 itemBuilder: (context, index, animation) {
                   return SizeTransition(
                     sizeFactor: animation,
-                    child: ListTile(
-                      title: Text(items[index].title),
-                      subtitle: Text(items[index].xmlUrl),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        color: Colors.redAccent,
-                        tooltip: 'Unsubscribe',
-                        onPressed: () {
-                          model.delete(items[index]);
-                          _deleteItem(index);
-                        },
-                      ),
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(items[index].title),
+                          ),
+                          subtitle: Text(items[index].xmlUrl),
+                          trailing: PopupList(
+                            subscription: items[index],
+                            onUpdate: () => _deleteItem(index),
+                          ),
+                          contentPadding: const EdgeInsets.only(
+                            top: 4.0,
+                            bottom: 4.0,
+                            left: 12.0,
+                          ),
+                        ),
+                        const Divider(),
+                      ],
                     ),
                   );
                 },

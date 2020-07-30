@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:rssreader/components/rounded_bottom_sheet.dart';
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
+import 'package:rssreader/screens/sources/dialog_text_field.dart';
 import 'package:rssreader/screens/sources/sources_list_screen.dart';
 import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/utils/constants.dart';
@@ -94,8 +95,17 @@ class SourcesScreen extends StatelessWidget {
                         ListTile(
                           leading: const Icon(Icons.edit),
                           title: const Text("Rename"),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.pop(context);
+
+                            final result = await _showInputDialog(
+                              context,
+                              category,
+                            );
+
+                            if (result != null) {
+                              model.renameCategory(category, result);
+                            }
                           },
                         ),
                         ListTile(
@@ -116,6 +126,47 @@ class SourcesScreen extends StatelessWidget {
             itemCount: model.categories.length,
             padding: const EdgeInsets.symmetric(vertical: 10.0),
           ),
+        );
+      },
+    );
+  }
+
+  Future<String> _showInputDialog(
+    BuildContext context,
+    String currentCategory,
+  ) {
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        String result = '';
+
+        return AlertDialog(
+          title: Text('Edit Category'),
+          content: DialogTextField(
+            initialValue: currentCategory,
+            onChanged: (value) {
+              result = value;
+            },
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: const Text('SAVE'),
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                  result.trim().length != 0 && result != currentCategory
+                      ? result
+                      : null,
+                );
+              },
+            )
+          ],
         );
       },
     );

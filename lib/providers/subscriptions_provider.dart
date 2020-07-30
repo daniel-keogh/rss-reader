@@ -104,4 +104,18 @@ class SubscriptionsProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void renameCategory(String oldName, String newName) {
+    _subscriptions.where((e) => e.category == oldName).forEach((e) {
+      e.category = newName;
+
+      try {
+        _db.update(e);
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    notifyListeners();
+  }
 }

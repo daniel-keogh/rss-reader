@@ -1,21 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 
-enum MenuAction {
-  unsub,
+enum _Action {
+  unsubscribe,
   move,
 }
 
 class PopupList extends StatelessWidget {
-  final Iterable<String> categories;
   final Subscription subscription;
+  final Function onUpdate;
 
   const PopupList({
     Key key,
-    @required this.categories,
     @required this.subscription,
+    @required this.onUpdate,
   }) : super(key: key);
 
   @override
@@ -25,35 +28,52 @@ class PopupList extends StatelessWidget {
       listen: false,
     );
 
-    return PopupMenuButton<MenuAction>(
+    return PopupMenuButton<_Action>(
+      itemBuilder: (context) => _itemList(),
       padding: EdgeInsets.zero,
       onSelected: (value) async {
         switch (value) {
-          case MenuAction.move:
-            final result = await _showCategoryDialog(context, categories);
+          case _Action.move:
+            final result = await _showCategoryDialog(context, model.categories);
 
             if (result != null && result.trim().length != 0) {
+              onUpdate();
               model.changeCategory(subscription.id, result.trim());
             }
             break;
-          case MenuAction.unsub:
+          case _Action.unsubscribe:
+            onUpdate();
             model.delete(subscription);
             break;
           default:
             break;
         }
       },
-      itemBuilder: (context) => <PopupMenuItem<MenuAction>>[
-        PopupMenuItem<MenuAction>(
-          value: MenuAction.move,
-          child: Text('Move'),
-        ),
-        PopupMenuItem<MenuAction>(
-          value: MenuAction.unsub,
-          child: Text('Unsubscribe'),
-        ),
-      ],
     );
+  }
+
+  List<PopupMenuItem<_Action>> _itemList() {
+    return <PopupMenuItem<_Action>>[
+      PopupMenuItem<_Action>(
+        value: _Action.move,
+        child: ListTile(
+          title: const Text('Move'),
+          leading: const Icon(Icons.edit),
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
+      PopupMenuItem<_Action>(
+        value: _Action.unsubscribe,
+        child: ListTile(
+          title: const Text('Unsubscribe'),
+          leading: const Icon(
+            Icons.delete_outline,
+            color: Colors.redAccent,
+          ),
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
+    ];
   }
 
   Future<String> _showCategoryDialog(
@@ -88,11 +108,13 @@ class PopupList extends StatelessWidget {
           actions: <Widget>[
             FlatButton(
               child: const Text('CANCEL'),
-              onPressed: () => Navigator.of(context).pop(result),
+              onPressed: () => Navigator.of(context).pop(null),
             ),
             FlatButton(
               child: const Text('SAVE'),
-              onPressed: () => Navigator.of(context).pop(result),
+              onPressed: () => Navigator.of(context).pop(
+                result != subscription.category ? result : null,
+              ),
             ),
           ],
         );
