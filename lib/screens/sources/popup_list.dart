@@ -89,6 +89,7 @@ class PopupList extends StatelessWidget {
 
         return AlertDialog(
           title: const Text('Select Category'),
+          contentPadding: EdgeInsets.only(top: 20.0),
           content: StatefulBuilder(
             builder: (context, setState) => SingleChildScrollView(
               child: ListBody(
