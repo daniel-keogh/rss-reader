@@ -15,7 +15,7 @@ class SettingsSection extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Text(
             title,
             style: TextStyle(
@@ -25,7 +25,7 @@ class SettingsSection extends StatelessWidget {
           ),
         ),
         ListView.separated(
-          separatorBuilder: (context, index) => Divider(),
+          separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) => listTiles[index],
           itemCount: listTiles.length,
           physics: NeverScrollableScrollPhysics(),

@@ -18,46 +18,49 @@ class SearchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SubscriptionsProvider>(
-      builder: (context, value, child) => ListTile(
-        title: Padding(
-          padding: EdgeInsets.only(bottom: 6.0),
-          child: Text(
-            searchResult.title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+    return ListTile(
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 6.0),
+        child: Text(
+          searchResult.title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        subtitle: searchResult.website != null
-            ? Text(Uri.parse(searchResult.website).host)
-            : null,
-        leading: searchResult.publisherImg != null
-            ? CircleAvatar(
-                backgroundImage: NetworkImage(
-                  searchResult.publisherImg,
-                ),
-                backgroundColor: Colors.transparent,
-              )
-            : null,
-        trailing: !value.isSubscribed(searchResult.xmlUrl)
-            ? IconButton(
-                icon: Icon(Icons.add_circle),
-                color: Colors.blueAccent,
-                onPressed: () => value.add(
-                  Subscription(
-                    title: searchResult.title,
-                    xmlUrl: searchResult.xmlUrl,
-                    category: category,
-                  ),
-                ),
-              )
-            : IconButton(
-                icon: Icon(Icons.check_circle),
-                color: Colors.redAccent,
-                onPressed: () => value.deleteByXmlUrl(searchResult.xmlUrl),
+      ),
+      subtitle: searchResult.website != null
+          ? Text(Uri.parse(searchResult.website).host)
+          : null,
+      leading: searchResult.publisherImg != null
+          ? CircleAvatar(
+              backgroundImage: NetworkImage(
+                searchResult.publisherImg,
               ),
+              backgroundColor: Colors.black.withOpacity(0.1),
+            )
+          : null,
+      trailing: Consumer<SubscriptionsProvider>(
+        builder: (context, model, child) =>
+            !model.isSubscribed(searchResult.xmlUrl)
+                ? IconButton(
+                    icon: const Icon(Icons.add_circle_outline),
+                    tooltip: 'Subscribe',
+                    color: Colors.blueAccent,
+                    onPressed: () => model.add(
+                      Subscription(
+                        title: searchResult.title,
+                        xmlUrl: searchResult.xmlUrl,
+                        category: category,
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.check_circle_outline),
+                    tooltip: 'Unsubscribe',
+                    color: Colors.redAccent,
+                    onPressed: () => model.deleteByXmlUrl(searchResult.xmlUrl),
+                  ),
       ),
     );
   }

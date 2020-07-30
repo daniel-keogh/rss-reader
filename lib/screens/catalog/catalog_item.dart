@@ -12,6 +12,27 @@ class CatalogItem extends StatelessWidget {
     @required this.handleTap,
   }) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Positioned.fill(
+          bottom: 0.0,
+          child: _buildGridTile(),
+        ),
+        Positioned.fill(
+          child: Material(
+            elevation: 100,
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: handleTap,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   Widget _buildGridTile() {
     return GridTile(
       footer: Material(
@@ -44,26 +65,6 @@ class CatalogItem extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Positioned.fill(
-          bottom: 0.0,
-          child: _buildGridTile(),
-        ),
-        Positioned.fill(
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: handleTap,
-            ),
-          ),
-        )
-      ],
     );
   }
 }

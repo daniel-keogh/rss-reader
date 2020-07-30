@@ -10,7 +10,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: const Text("Settings"),
       ),
       body: Container(
         child: ListView(
@@ -20,8 +20,8 @@ class SettingsScreen extends StatelessWidget {
               listTiles: <Widget>[
                 Consumer<ThemeProvider>(
                   builder: (context, prov, child) => SwitchListTile(
-                    title: Text("Dark theme"),
-                    secondary: Icon(Icons.brightness_4),
+                    title: const Text("Dark theme"),
+                    secondary: const Icon(Icons.brightness_4),
                     value: prov.theme == ActiveTheme.dark,
                     onChanged: (value) {
                       prov.theme = value ? ActiveTheme.dark : ActiveTheme.light;
