@@ -144,6 +144,8 @@ class SourcesScreen extends StatelessWidget {
           title: Text('Edit Category'),
           content: DialogTextField(
             initialValue: currentCategory,
+            placeholder: currentCategory,
+            autoFocus: true,
             onChanged: (value) {
               result = value;
             },

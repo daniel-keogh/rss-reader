@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
+import 'package:rssreader/screens/sources/dialog_text_field.dart';
 
 enum _Action {
   unsubscribe,
@@ -84,6 +85,7 @@ class PopupList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         String result = subscription.category;
+        String newCategory = '';
 
         return AlertDialog(
           title: const Text('Select Category'),
@@ -91,6 +93,22 @@ class PopupList extends StatelessWidget {
             builder: (context, setState) => SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
+                  RadioListTile(
+                    title: DialogTextField(
+                      onChanged: (value) {
+                        newCategory = value;
+                        setState(() => result = value);
+                      },
+                      initialValue: '',
+                      placeholder: 'New Category',
+                      autoFocus: false,
+                    ),
+                    value: newCategory,
+                    groupValue: result,
+                    onChanged: (value) {
+                      setState(() => result = value);
+                    },
+                  ),
                   for (final category in categories)
                     RadioListTile(
                       title: Text(category),
@@ -99,7 +117,7 @@ class PopupList extends StatelessWidget {
                       onChanged: (value) {
                         setState(() => result = value);
                       },
-                    )
+                    ),
                 ],
               ),
               padding: EdgeInsets.zero,

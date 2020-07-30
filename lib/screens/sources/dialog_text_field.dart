@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 class DialogTextField extends StatefulWidget {
   final String initialValue;
+  final String placeholder;
+  final bool autoFocus;
   final Function onChanged;
 
   const DialogTextField({
     Key key,
-    this.initialValue,
-    this.onChanged,
+    @required this.initialValue,
+    @required this.placeholder,
+    @required this.autoFocus,
+    @required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -31,11 +35,11 @@ class _DialogTextFieldState extends State<DialogTextField> {
       children: <Widget>[
         Expanded(
           child: TextField(
-            autofocus: true,
+            autofocus: widget.autoFocus,
             autocorrect: true,
             controller: _controller,
             decoration: InputDecoration(
-              hintText: widget.initialValue,
+              hintText: widget.placeholder,
             ),
             onChanged: widget.onChanged,
           ),
