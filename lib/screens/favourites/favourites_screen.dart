@@ -15,12 +15,13 @@ class FavouritesScreen extends StatelessWidget {
     return Consumer<FavouritesProvider>(
       builder: (context, model, child) {
         final favs = model.favourites;
+        final bool hasItems = favs.length != null && favs.length > 0;
 
         return Scaffold(
           appBar: AppBar(
             title: const Text('Favourites'),
             actions: <Widget>[
-              if (favs.length > 0)
+              if (hasItems)
                 IconButton(
                   icon: Icon(Icons.clear_all),
                   tooltip: 'Clear all',
@@ -35,7 +36,7 @@ class FavouritesScreen extends StatelessWidget {
                 ),
             ],
           ),
-          body: favs.length > 0
+          body: hasItems
               ? Scrollbar(
                   child: AnimatedList(
                     key: _globalKey,
