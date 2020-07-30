@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:rssreader/components/rounded_bottom_sheet.dart';
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
+import 'package:rssreader/screens/sources/sources_list_screen.dart';
 import 'package:rssreader/services/opml.dart';
+import 'package:rssreader/utils/constants.dart';
 import 'package:rssreader/utils/routes.dart';
 
 class SourcesScreen extends StatelessWidget {
@@ -20,7 +24,7 @@ class SourcesScreen extends StatelessWidget {
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => _showModalBottomSheet(context),
+        onPressed: () => _showAddBottomSheet(context),
       ),
     );
   }
@@ -54,89 +58,102 @@ class SourcesScreen extends StatelessWidget {
 
   Widget _buildBody() {
     return Consumer<SubscriptionsProvider>(
-      builder: (context, value, child) => Scrollbar(
-        child: ListView.separated(
-          itemBuilder: (context, index) {
-            final category = value.categories.elementAt(index);
-            final items = value.subscriptions.where(
-              (e) => e.category == category,
-            );
+      builder: (context, model, child) {
+        if (model.categories.length == null || model.categories.length == 0) {
+          return const Center(
+            child: const Text('You are not subscribed to any feeds.'),
+          );
+        }
 
-            return ExpansionTile(
-              title: Text(category),
-              children: <Widget>[
-                ListView(
-                  children: <Widget>[
-                    for (final item in items)
-                      ListTile(
-                        title: Text(item.title),
-                        subtitle: Text(item.xmlUrl),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.redAccent,
-                          tooltip: 'Unsubscribe',
-                          onPressed: () => value.delete(item),
-                        ),
+        return Scrollbar(
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              final category = model.categories.elementAt(index);
+
+              return ListTile(
+                title: Text(category),
+                leading: Icon(Icons.folder_open),
+                trailing: Icon(Icons.keyboard_arrow_right),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => SourcesListScreen(
+                        category: category,
                       ),
-                  ],
-                  shrinkWrap: true,
-                  physics: const ScrollPhysics(
-                    parent: const PageScrollPhysics(),
-                  ),
-                ),
-              ],
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(thickness: 0.5),
-          itemCount: value.categories.length,
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-        ),
-      ),
+                    ),
+                  );
+                },
+                onLongPress: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: bottomSheetShape,
+                    builder: (context) => RoundedBottomSheet(
+                      tiles: <ListTile>[
+                        ListTile(
+                          leading: const Icon(Icons.edit),
+                          title: const Text("Rename"),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.delete_sweep),
+                          title: const Text("Delete Feeds"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            model.deleteByCategory(category);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(thickness: 0.5),
+            itemCount: model.categories.length,
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+          ),
+        );
+      },
     );
   }
 
-  void _showModalBottomSheet(BuildContext context) {
+  void _showAddBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: const BorderRadius.vertical(
-          top: const Radius.circular(10.0),
-        ),
-      ),
+      shape: bottomSheetShape,
       builder: (context) {
-        return Wrap(
-          children: <Widget>[
-            ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              physics: const NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.search),
-                  title: const Text("Search"),
-                  onTap: () {
-                    Navigator.of(context).pushReplacementNamed(
-                      Routes.catalog,
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.attach_file),
-                  title: const Text("Import OPML file"),
-                  onTap: () async {
-                    List<Subscription> subs = await Opml.import();
+        return RoundedBottomSheet(
+          tiles: <ListTile>[
+            ListTile(
+              leading: const Icon(Icons.search),
+              title: const Text("Search"),
+              onTap: () {
+                Navigator.of(context).pushReplacementNamed(
+                  Routes.catalog,
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.attach_file),
+              title: const Text("Import OPML file"),
+              onTap: () async {
+                final List<Subscription> subs = await Opml.import();
 
-                    Provider.of<SubscriptionsProvider>(
-                      context,
-                      listen: false,
-                    ).addAll(subs);
+                if (subs.length > 0) {
+                  Provider.of<SubscriptionsProvider>(
+                    context,
+                    listen: false,
+                  ).addAll(subs);
+                }
 
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            )
+                Navigator.pop(context);
+              },
+            ),
           ],
         );
       },

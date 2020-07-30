@@ -111,6 +111,10 @@ class SubscriptionsDb {
     return await _delete(_COLUMN_URL, xmlUrl);
   }
 
+  Future<int> deleteByCategory(String category) async {
+    return await _delete(_COLUMN_CATEGORY, category);
+  }
+
   Future<int> _delete(String column, dynamic arg) async {
     final Database db = await _db.database;
 

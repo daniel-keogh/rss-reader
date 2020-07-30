@@ -25,9 +25,14 @@ class SubscriptionsProvider extends ChangeNotifier {
   }
 
   UnmodifiableListView<String> get categories {
-    return UnmodifiableListView(
-      Set.from(_subscriptions.map((e) => e.category)),
+    Iterable<String> sorted = Set<String>.from(
+      _subscriptions.map((e) => e.category).toList()
+        ..sort(
+          (a, b) => a.toUpperCase().compareTo(b.toUpperCase()),
+        ),
     );
+
+    return UnmodifiableListView(sorted);
   }
 
   void add(Subscription sub) {
@@ -70,7 +75,33 @@ class SubscriptionsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteByCategory(String category) {
+    _subscriptions.removeWhere((e) => e.category == category);
+
+    try {
+      _db.deleteByCategory(category);
+    } catch (e) {
+      print(e);
+    }
+
+    notifyListeners();
+  }
+
   bool isSubscribed(String xmlUrl) {
     return _subscriptions.map((e) => e.xmlUrl).contains(xmlUrl);
+  }
+
+  void changeCategory(int subId, String category) {
+    final index = _subscriptions.indexWhere((e) => e.id == subId);
+
+    _subscriptions[index].category = category;
+
+    try {
+      _db.update(_subscriptions[index]);
+    } catch (e) {
+      print(e);
+    }
+
+    notifyListeners();
   }
 }
