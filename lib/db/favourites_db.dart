@@ -95,4 +95,13 @@ class FavouritesDb {
       whereArgs: [id],
     );
   }
+
+  Future<int> deleteAll() async {
+    final Database db = await _db.database;
+
+    return await db.delete(
+      _TABLE_FAVOURITES,
+      where: '1',
+    );
+  }
 }

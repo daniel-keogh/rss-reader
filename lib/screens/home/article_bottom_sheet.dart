@@ -10,10 +10,14 @@ import 'package:rssreader/screens/webview/webview_screen.dart';
 
 class ArticleBottomSheet extends StatelessWidget {
   final Article article;
+  final Function onFavourite;
+  final Function onUnfavourite;
 
-  const ArticleBottomSheet({
+  ArticleBottomSheet({
     Key key,
     @required this.article,
+    this.onFavourite,
+    this.onUnfavourite,
   }) : super(key: key);
 
   @override
@@ -59,6 +63,7 @@ class ArticleBottomSheet extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                   model.add(article);
+                  onFavourite?.call();
                 },
               )
             else
@@ -68,6 +73,7 @@ class ArticleBottomSheet extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                   model.delete(article);
+                  onUnfavourite?.call();
                 },
               ),
             ListTile(

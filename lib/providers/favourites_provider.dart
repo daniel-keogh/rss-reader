@@ -60,4 +60,16 @@ class FavouritesProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void deleteAll() {
+    _favourites.clear();
+
+    try {
+      _db.deleteAll();
+    } catch (e) {
+      print(e);
+    }
+
+    notifyListeners();
+  }
 }
