@@ -41,26 +41,34 @@ class SearchItem extends StatelessWidget {
             )
           : null,
       trailing: Consumer<SubscriptionsProvider>(
-        builder: (context, model, child) =>
-            !model.isSubscribed(searchResult.xmlUrl)
-                ? IconButton(
-                    icon: const Icon(Icons.add_circle_outline),
-                    tooltip: 'Subscribe',
-                    color: Colors.blueAccent,
-                    onPressed: () => model.add(
-                      Subscription(
-                        title: searchResult.title,
-                        xmlUrl: searchResult.xmlUrl,
-                        category: category,
-                      ),
+        builder: (context, model, child) => AnimatedSwitcher(
+          child: !model.isSubscribed(searchResult.xmlUrl)
+              ? IconButton(
+                  icon: const Icon(Icons.add_circle_outline),
+                  tooltip: 'Subscribe',
+                  color: Colors.blueAccent,
+                  key: ValueKey(1),
+                  onPressed: () => model.add(
+                    Subscription(
+                      title: searchResult.title,
+                      xmlUrl: searchResult.xmlUrl,
+                      category: category,
                     ),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.check_circle_outline),
-                    tooltip: 'Unsubscribe',
-                    color: Colors.redAccent,
-                    onPressed: () => model.deleteByXmlUrl(searchResult.xmlUrl),
                   ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.check_circle_outline),
+                  tooltip: 'Unsubscribe',
+                  color: Colors.redAccent,
+                  key: ValueKey(2),
+                  onPressed: () => model.deleteByXmlUrl(searchResult.xmlUrl),
+                ),
+          duration: const Duration(milliseconds: 500),
+          transitionBuilder: (child, animation) => ScaleTransition(
+            scale: animation,
+            child: child,
+          ),
+        ),
       ),
     );
   }
