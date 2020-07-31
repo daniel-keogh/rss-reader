@@ -87,6 +87,22 @@ class SubscriptionsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteById(int id) {
+    _subscriptions.removeWhere((e) => e.id == id);
+
+    try {
+      _db.deleteById(id);
+    } catch (e) {
+      print(e);
+    }
+
+    notifyListeners();
+  }
+
+  void deleteAllById(Iterable<int> ids) {
+    ids.forEach((e) => deleteById(e));
+  }
+
   bool isSubscribed(String xmlUrl) {
     return _subscriptions.map((e) => e.xmlUrl).contains(xmlUrl);
   }
