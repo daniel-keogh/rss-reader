@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/utils/constants.dart';
-
 class RoundedBottomSheet extends StatelessWidget {
   final List<ListTile> tiles;
 
@@ -16,7 +14,7 @@ class RoundedBottomSheet extends StatelessWidget {
       children: <Widget>[
         ListView(
           shrinkWrap: true,
-          padding: bottomSheetPadding,
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[...tiles],
         )

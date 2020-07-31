@@ -5,5 +5,3 @@ const bottomSheetShape = const RoundedRectangleBorder(
     top: const Radius.circular(10.0),
   ),
 );
-
-const bottomSheetPadding = const EdgeInsets.symmetric(vertical: 10.0);
