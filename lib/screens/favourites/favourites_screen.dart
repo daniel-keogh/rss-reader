@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:rssreader/components/confirm_dialog.dart';
 
 import 'package:rssreader/models/favourite.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
@@ -27,7 +28,14 @@ class FavouritesScreen extends StatelessWidget {
                   icon: Icon(Icons.clear_all),
                   tooltip: 'Clear all',
                   onPressed: () async {
-                    if (await _showConfirmationDialog(context)) {
+                    bool confirmed = await showConfirmDialog(
+                      context: context,
+                      title: 'Delete',
+                      message:
+                          'Are you sure you want to delete all your favourites?',
+                    );
+
+                    if (confirmed) {
                       Provider.of<FavouritesProvider>(
                         context,
                         listen: false,
@@ -66,37 +74,6 @@ class FavouritesScreen extends StatelessWidget {
         sizeFactor: animation,
         child: const ListTile(),
       ),
-    );
-  }
-
-  Future<bool> _showConfirmationDialog(BuildContext context) async {
-    return showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                const Text(
-                  'Are you sure you want to delete all your favourites?',
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('CANCEL'),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            FlatButton(
-              child: const Text('YES'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        );
-      },
     );
   }
 }

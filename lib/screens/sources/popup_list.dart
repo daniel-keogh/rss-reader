@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/screens/sources/category_dialog.dart';
+import 'package:rssreader/screens/sources/dialogs.dart';
 
 enum _Action {
   unsubscribe,
