@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:rssreader/components/confirm_dialog.dart';
 import 'package:rssreader/components/rounded_bottom_sheet.dart';
 import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/screens/sources/rename_dialog.dart';
+import 'package:rssreader/screens/sources/dialogs.dart';
 import 'package:rssreader/screens/sources/sources_list_screen.dart';
 import 'package:rssreader/services/opml.dart';
 import 'package:rssreader/utils/constants.dart';
@@ -111,9 +112,18 @@ class SourcesScreen extends StatelessWidget {
                         ListTile(
                           leading: const Icon(Icons.delete_sweep),
                           title: const Text("Delete Feeds"),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.pop(context);
-                            model.deleteByCategory(category);
+
+                            bool confirmed = await showConfirmDialog(
+                              context: context,
+                              message:
+                                  'Are you sure you want to delete everything in this category?',
+                            );
+
+                            if (confirmed) {
+                              model.deleteByCategory(category);
+                            }
                           },
                         ),
                       ],
