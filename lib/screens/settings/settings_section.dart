@@ -24,8 +24,7 @@ class SettingsSection extends StatelessWidget {
             ),
           ),
         ),
-        ListView.separated(
-          separatorBuilder: (context, index) => const Divider(),
+        ListView.builder(
           itemBuilder: (context, index) => listTiles[index],
           itemCount: listTiles.length,
           physics: NeverScrollableScrollPhysics(),
