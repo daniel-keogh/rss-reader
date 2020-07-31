@@ -43,7 +43,7 @@ class PopupList extends StatelessWidget {
 
             if (result != null && result.trim().length != 0) {
               onUpdate();
-              model.changeCategory(subscription.id, result.trim());
+              model.moveCategory(subscription.id, result.trim());
             }
             break;
           case _Action.unsubscribe:

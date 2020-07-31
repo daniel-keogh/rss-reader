@@ -104,7 +104,7 @@ class SourcesScreen extends StatelessWidget {
                             );
 
                             if (result != null) {
-                              model.renameCategory(category, result);
+                              model.renameExistingCategory(category, result);
                             }
                           },
                         ),

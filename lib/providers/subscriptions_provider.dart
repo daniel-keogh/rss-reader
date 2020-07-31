@@ -6,7 +6,7 @@ import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/db/subscriptions_db.dart';
 
 class SubscriptionsProvider extends ChangeNotifier {
-  List<Subscription> _subscriptions = [];
+  Set<Subscription> _subscriptions = HashSet<Subscription>();
 
   final _db = SubscriptionsDb();
 
@@ -15,17 +15,22 @@ class SubscriptionsProvider extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    _subscriptions = await _db.getAll();
+    _subscriptions = HashSet<Subscription>.from(
+      await _db.getAll(),
+    );
 
     notifyListeners();
   }
 
   UnmodifiableListView<Subscription> get subscriptions {
-    return UnmodifiableListView(_subscriptions);
+    return UnmodifiableListView(
+      _subscriptions.toList()..sort(),
+    );
   }
 
   UnmodifiableListView<String> get categories {
-    Iterable<String> sorted = Set<String>.from(
+    // Get a (sorted) set of all the categories
+    final sorted = Set<String>.from(
       _subscriptions.map((e) => e.category).toList()
         ..sort(
           (a, b) => a.toUpperCase().compareTo(b.toUpperCase()),
@@ -36,43 +41,104 @@ class SubscriptionsProvider extends ChangeNotifier {
   }
 
   void add(Subscription sub) {
-    _subscriptions.add(sub);
+    // True if `sub` is not in `_subscriptions`
+    if (_subscriptions.add(sub)) {
+      try {
+        _db.insert(sub);
+      } catch (e) {
+        // TODO:
+        print(e);
+      }
+
+      notifyListeners();
+    }
+  }
+
+  void addAll(Iterable<Subscription> subs) {
+    final newSubs = <Subscription>[];
+
+    subs.forEach((e) {
+      // True if `e` is not in `_subscriptions`
+      if (_subscriptions.add(e)) {
+        newSubs.add(e);
+      }
+    });
 
     try {
-      _db.insert(sub);
+      _db.insertAll(newSubs);
     } catch (e) {
+      // TODO:
       print(e);
     }
 
     notifyListeners();
   }
 
-  void addAll(List<Subscription> subs) {
-    _subscriptions.addAll(subs);
+  void delete(Subscription sub) {
+    // Only true if `sub` was in `_subscriptions`
+    if (_subscriptions.remove(sub)) {
+      try {
+        _db.deleteByXmlUrl(sub.xmlUrl);
+      } catch (e) {
+        // TODO:
+        print(e);
+      }
 
-    try {
-      _db.insertAll(subs);
-    } catch (e) {
-      print(e);
+      notifyListeners();
+    }
+  }
+
+  void deleteById(int id) {
+    final bool wasRemoved = _subscriptions.remove(
+      (e) => _subscriptions.firstWhere((e) => e.id == id),
+    );
+
+    if (wasRemoved) {
+      try {
+        _db.deleteById(id);
+      } catch (e) {
+        // TODO:
+        print(e);
+      }
+
+      notifyListeners();
+    }
+  }
+
+  void deleteAllById(Iterable<int> ids) {
+    for (final int id in ids) {
+      final bool wasRemoved = _subscriptions.remove(
+        (e) => _subscriptions.firstWhere((e) => e.id == id),
+      );
+
+      if (wasRemoved) {
+        try {
+          _db.deleteById(id);
+        } catch (e) {
+          // TODO:
+          print(e);
+        }
+      }
     }
 
     notifyListeners();
-  }
-
-  void delete(Subscription subscription) {
-    deleteByXmlUrl(subscription.xmlUrl);
   }
 
   void deleteByXmlUrl(String xmlUrl) {
-    _subscriptions.removeWhere((e) => e.xmlUrl == xmlUrl);
+    final bool wasRemoved = _subscriptions.remove(
+      (e) => _subscriptions.firstWhere((e) => e.xmlUrl == xmlUrl),
+    );
 
-    try {
-      _db.deleteByXmlUrl(xmlUrl);
-    } catch (e) {
-      print(e);
+    if (wasRemoved) {
+      try {
+        _db.deleteByXmlUrl(xmlUrl);
+      } catch (e) {
+        // TODO:
+        print(e);
+      }
+
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   void deleteByCategory(String category) {
@@ -81,53 +147,46 @@ class SubscriptionsProvider extends ChangeNotifier {
     try {
       _db.deleteByCategory(category);
     } catch (e) {
+      // TODO:
       print(e);
     }
 
     notifyListeners();
-  }
-
-  void deleteById(int id) {
-    _subscriptions.removeWhere((e) => e.id == id);
-
-    try {
-      _db.deleteById(id);
-    } catch (e) {
-      print(e);
-    }
-
-    notifyListeners();
-  }
-
-  void deleteAllById(Iterable<int> ids) {
-    ids.forEach((e) => deleteById(e));
   }
 
   bool isSubscribed(String xmlUrl) {
     return _subscriptions.map((e) => e.xmlUrl).contains(xmlUrl);
   }
 
-  void changeCategory(int subId, String category) {
-    final index = _subscriptions.indexWhere((e) => e.id == subId);
+  void moveCategory(int id, String category) {
+    final sub = _subscriptions.firstWhere((e) => e.id == id);
 
-    _subscriptions[index].category = category;
+    sub.category = category;
 
     try {
-      _db.update(_subscriptions[index]);
+      _db.update(sub);
     } catch (e) {
+      // TODO:
       print(e);
     }
 
     notifyListeners();
   }
 
-  void renameCategory(String oldName, String newName) {
-    _subscriptions.where((e) => e.category == oldName).forEach((e) {
+  void renameExistingCategory(String oldName, String newName) {
+    final subs = _subscriptions.where((e) => e.category == oldName);
+
+    if (subs.length == 0) {
+      return;
+    }
+
+    subs.forEach((e) {
       e.category = newName;
 
       try {
         _db.update(e);
       } catch (e) {
+        // TODO:
         print(e);
       }
     });

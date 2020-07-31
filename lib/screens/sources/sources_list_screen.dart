@@ -102,7 +102,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
                         _deleteItem(index);
                         items.removeAt(index);
 
-                        model.changeCategory(key, result.trim());
+                        model.moveCategory(key, result.trim());
                       }
                     });
                   }

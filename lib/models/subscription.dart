@@ -1,8 +1,8 @@
-class Subscription {
+class Subscription implements Comparable<Subscription> {
   int id;
-  String title;
+  final String title;
   String category;
-  String xmlUrl;
+  final String xmlUrl;
 
   Subscription({
     this.id,
@@ -20,7 +20,7 @@ class Subscription {
         );
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
+    final map = <String, dynamic>{
       "title": title,
       "category": category,
       "xmlUrl": xmlUrl,
@@ -32,6 +32,23 @@ class Subscription {
 
     return map;
   }
+
+  @override
+  int compareTo(Subscription other) {
+    return title.toLowerCase().compareTo(other.title.toLowerCase());
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Subscription &&
+          runtimeType == other.runtimeType &&
+          title == other.title &&
+          category == other.category &&
+          xmlUrl == other.xmlUrl;
+
+  @override
+  int get hashCode => title.hashCode ^ category.hashCode ^ xmlUrl.hashCode;
 
   @override
   String toString() {

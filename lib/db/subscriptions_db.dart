@@ -16,7 +16,7 @@ class SubscriptionsDb {
   Future<Iterable<Subscription>> getAll() async {
     final Database db = await _db.database;
 
-    var subs = await db.query(
+    final subs = await db.query(
       _TABLE_SUBSCRIPTIONS,
       columns: [
         _COLUMN_ID,
@@ -26,7 +26,7 @@ class SubscriptionsDb {
       ],
     );
 
-    var subsList = List<Subscription>();
+    final subsList = List<Subscription>();
 
     subs.forEach((element) {
       Subscription sub = Subscription.fromMap(element);
@@ -47,7 +47,7 @@ class SubscriptionsDb {
   Future<Subscription> _get(String column, dynamic arg) async {
     final Database db = await _db.database;
 
-    List<Map> maps = await db.query(
+    final List<Map> maps = await db.query(
       _TABLE_SUBSCRIPTIONS,
       columns: [
         _COLUMN_ID,
@@ -77,19 +77,29 @@ class SubscriptionsDb {
     return subscription;
   }
 
-  Future<void> insertAll(Iterable<Subscription> subscriptions) async {
+  Future<Iterable<Subscription>> insertAll(
+    Iterable<Subscription> subscriptions,
+  ) async {
     final Database db = await _db.database;
 
     final Batch batch = db.batch();
 
-    subscriptions.forEach((sub) {
+    final subs = subscriptions.toList();
+    subs.forEach((sub) {
       batch.insert(
         _TABLE_SUBSCRIPTIONS,
         sub.toMap(),
       );
     });
 
-    await batch.commit(noResult: true);
+    final ids = await batch.commit();
+
+    // Set the id's of each subscription
+    for (int i = 0; i < ids.length; i++) {
+      subs[i].id = i;
+    }
+
+    return subs;
   }
 
   Future<int> update(Subscription subscription) async {
