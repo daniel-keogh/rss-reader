@@ -60,6 +60,12 @@ class ArticlesProvider extends ChangeNotifier {
     return UnmodifiableListView(read);
   }
 
+  UnmodifiableListView<Article> getBySubscription(Subscription subscription) {
+    return UnmodifiableListView(
+      _articles.where((e) => e.subscriptionId == subscription.id),
+    );
+  }
+
   UnmodifiableListView<Article> getByCategory([String category = 'All']) {
     return UnmodifiableListView(
       _articles.where((e) => category == 'All' || e.category == category),
