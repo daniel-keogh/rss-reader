@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class SettingsSection extends StatelessWidget {
   final String title;
-  final List<Widget> listTiles;
+  final List<Widget> children;
 
   SettingsSection({
     Key key,
     @required this.title,
-    @required this.listTiles,
+    @required this.children,
   }) : super(key: key);
 
   @override
@@ -25,8 +25,8 @@ class SettingsSection extends StatelessWidget {
           ),
         ),
         ListView.builder(
-          itemBuilder: (context, index) => listTiles[index],
-          itemCount: listTiles.length,
+          itemBuilder: (context, index) => children[index],
+          itemCount: children.length,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
         ),

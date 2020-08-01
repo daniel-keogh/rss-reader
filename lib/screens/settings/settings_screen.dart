@@ -6,7 +6,14 @@ import 'package:rssreader/screens/settings/settings_section.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/theme_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  double currentValue = 500.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +27,7 @@ class SettingsScreen extends StatelessWidget {
             children: <Widget>[
               SettingsSection(
                 title: "Appearance",
-                listTiles: <Widget>[
+                children: <Widget>[
                   Consumer<ThemeProvider>(
                     builder: (context, prov, child) => SwitchListTile(
                       title: const Text("Dark theme"),
@@ -37,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
               const Divider(),
               SettingsSection(
                 title: "Behaviour",
-                listTiles: <Widget>[
+                children: <Widget>[
                   CheckboxListTile(
                     title: const Text("Use external browser"),
                     subtitle: const Text(
@@ -63,28 +70,41 @@ class SettingsScreen extends StatelessWidget {
               const Divider(),
               SettingsSection(
                 title: "Caching",
-                listTiles: <Widget>[
-                  ListTile(
-                    title: const Text("Time to keep entries"),
-                    subtitle: const Text(
-                      "Set the amount of time articles will be stored.",
-                    ),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: const Text("Article limit"),
-                    subtitle: const Text(
-                      'Set the maximum number of articles that will be stored on the device.',
-                    ),
-                    isThreeLine: true,
-                    onTap: () {},
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: const Text("Article limit"),
+                        subtitle: const Text(
+                          'Set the maximum number of articles that will be stored on the device.',
+                        ),
+                        isThreeLine: true,
+                      ),
+                      StatefulBuilder(
+                        builder: (context, setState) => Slider(
+                          label: "${currentValue.toInt()}",
+                          value: currentValue,
+                          min: 500.0,
+                          max: 3000.0,
+                          divisions: 5,
+                          onChanged: (value) {
+                            setState(() {
+                              currentValue = value;
+                            });
+                          },
+                          onChangeEnd: (value) {
+                            print(value);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
               const Divider(),
               SettingsSection(
                 title: "History",
-                listTiles: <Widget>[
+                children: <Widget>[
                   ListTile(
                     title: const Text("Clear reading history"),
                     onTap: () {},
@@ -94,7 +114,7 @@ class SettingsScreen extends StatelessWidget {
               const Divider(),
               SettingsSection(
                 title: "About",
-                listTiles: <Widget>[
+                children: <Widget>[
                   AboutListTile(
                     icon: const Icon(Icons.info_outline),
                     child: const Text('About'),

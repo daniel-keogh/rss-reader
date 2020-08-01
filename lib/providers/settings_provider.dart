@@ -28,7 +28,7 @@ class SettingsProvider extends ChangeNotifier {
     }
 
     try {
-      _refreshOnOpen = prefs.getBool(_REFRESH_ON_OPEN);
+      _refreshOnOpen = prefs.getBool(_REFRESH_ON_OPEN) ?? true;
     } catch (_) {
       _refreshOnOpen = true;
     }
