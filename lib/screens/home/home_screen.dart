@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:rssreader/screens/home/search_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:rssreader/models/article.dart';
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Divider(thickness: 0.5);
                 },
                 itemCount: articles.length,
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
               ),
               onRefresh: model.refreshAll,
             ),
@@ -145,7 +146,16 @@ class _HomeScreenState extends State<HomeScreen> {
       IconButton(
         icon: const Icon(Icons.search),
         tooltip: 'Search',
-        onPressed: () {},
+        onPressed: () {
+          final model = Provider.of<ArticlesProvider>(context, listen: false);
+
+          showSearch(
+            context: context,
+            delegate: ArticleSearch(
+              articles: model.articles,
+            ),
+          );
+        },
       ),
     ];
   }

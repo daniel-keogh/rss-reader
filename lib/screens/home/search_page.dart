@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/models/search_result.dart';
-import 'package:rssreader/screens/category/search_item.dart';
-import 'package:rssreader/services/networking.dart';
+import 'package:rssreader/models/article.dart';
+import 'package:rssreader/screens/home/article_item.dart';
 
-class SearchPage extends SearchDelegate {
-  final _nh = NetworkHelper();
+class ArticleSearch extends SearchDelegate {
+  final List<Article> articles;
+  final Function onResultTap;
+  final Function onResultLongPress;
+
+  ArticleSearch({
+    this.articles,
+    this.onResultTap,
+    this.onResultLongPress,
+  });
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -24,7 +31,10 @@ class SearchPage extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const BackButtonIcon(),
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
       onPressed: () => close(context, null),
     );
   }
@@ -36,32 +46,37 @@ class SearchPage extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final String fmtQuery = query.toLowerCase().trim();
 
-    return fmtQuery.isNotEmpty
-        ? FutureBuilder(
-            future: _nh.feedSearch(fmtQuery),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                final List<SearchResult> data = snapshot.data;
+    List<Article> results;
 
-                return data.length > 0
-                    ? ListView.builder(
-                        itemBuilder: (context, index) => SearchItem(
-                          searchResult: data[index],
-                          category: "Uncategorized",
-                        ),
-                        itemCount: data.length,
-                      )
-                    : const Center(
-                        child: const Text("No results found"),
-                      );
-              } else {
-                return const LinearProgressIndicator();
-              }
-            },
-          )
-        : const Center(
-            child: const Text("Enter a feed name or a URL"),
-          );
+    if (fmtQuery.isEmpty) {
+      // Show everything
+      results = articles;
+    } else {
+      results = articles
+          .where((e) => e.title.toLowerCase().contains(fmtQuery.toLowerCase()))
+          .toList();
+
+      if (results.length == 0) {
+        return const Center(
+          child: const Text("No results found."),
+        );
+      }
+    }
+
+    return Scrollbar(
+      child: ListView.separated(
+        itemBuilder: (context, index) => ArticleItem(
+          article: results[index],
+          handleTap: onResultTap,
+          handleLongPress: onResultLongPress,
+        ),
+        itemCount: results.length,
+        separatorBuilder: (context, index) {
+          return const Divider(thickness: 0.5);
+        },
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+      ),
+    );
   }
 
   @override
