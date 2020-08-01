@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Text title;
+  final String title;
   final bool enabled;
   final int count;
   final List<Widget> actions;
@@ -24,7 +24,7 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AnimatedCrossFade(
       duration: const Duration(milliseconds: 600),
       firstChild: AppBar(
-        title: title,
+        title: Text(title),
       ),
       secondChild: AppBar(
         title: Text(count.toString()),
