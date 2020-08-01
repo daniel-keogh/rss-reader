@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:rssreader/providers/favourites_provider.dart';
 
+import 'package:rssreader/providers/favourites_provider.dart';
+import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/providers/theme_provider.dart';
 import 'package:rssreader/screens/favourites/favourites_screen.dart';
@@ -40,6 +41,7 @@ class RssReader extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ThemeProvider(activeTheme)),
         ChangeNotifierProvider(create: (context) => SubscriptionsProvider()),
         ChangeNotifierProvider(create: (context) => FavouritesProvider()),
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
       ],
       child: Builder(
         builder: (context) => MaterialApp(

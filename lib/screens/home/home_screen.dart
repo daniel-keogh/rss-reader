@@ -3,8 +3,10 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:rssreader/utils/constants.dart';
+import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/components/article_bottom_sheet.dart';
@@ -48,30 +50,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (context, index) {
                   var article = articles[index];
 
-                  return ArticleItem(
-                    article: article,
-                    handleTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WebViewScreen(
+                  return Selector<SettingsProvider, OpenIn>(
+                    selector: (context, settings) => settings.openIn,
+                    builder: (context, model, child) => ArticleItem(
+                      article: article,
+                      handleTap: () async {
+                        if (model == OpenIn.internal) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WebViewScreen(
+                                article: article,
+                              ),
+                            ),
+                          );
+                        } else {
+                          if (await canLaunch(article.url)) {
+                            await launch(article.url);
+                          }
+                        }
+
+                        setState(() => article.isRead = true);
+                      },
+                      handleLongPress: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: bottomSheetShape,
+                          builder: (context) => ArticleBottomSheet(
                             article: article,
                           ),
-                        ),
-                      );
-
-                      setState(() => article.isRead = true);
-                    },
-                    handleLongPress: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        shape: bottomSheetShape,
-                        builder: (context) => ArticleBottomSheet(
-                          article: article,
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {

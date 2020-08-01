@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:rssreader/components/confirm_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import 'package:rssreader/components/confirm_dialog.dart';
 import 'package:rssreader/models/favourite.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
 import 'package:rssreader/components/article_bottom_sheet.dart';
+import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:rssreader/utils/constants.dart';
 
@@ -99,45 +101,54 @@ class _ListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor: animation,
-      child: ListTile(
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 6.0),
-          child: Text(
-            favourite.article.title,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        subtitle: Text(
-          favourite.article.publisher,
-          style: const TextStyle(fontSize: 12),
-        ),
-        leading: favourite.article.imageUrl != null
-            ? Image.network(favourite.article.imageUrl)
-            : null,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => WebViewScreen(
-                article: favourite.article,
+      child: Selector<SettingsProvider, OpenIn>(
+        selector: (context, settings) => settings.openIn,
+        builder: (context, openIn, child) => ListTile(
+          title: Padding(
+            padding: const EdgeInsets.only(bottom: 6.0),
+            child: Text(
+              favourite.article.title,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
             ),
-          );
-        },
-        onLongPress: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            shape: bottomSheetShape,
-            builder: (context) => ArticleBottomSheet(
-              article: favourite.article,
-              onUnfavourite: onDelete,
-            ),
-          );
-        },
+          ),
+          subtitle: Text(
+            favourite.article.publisher,
+            style: const TextStyle(fontSize: 12),
+          ),
+          leading: favourite.article.imageUrl != null
+              ? Image.network(favourite.article.imageUrl)
+              : null,
+          onTap: () async {
+            if (openIn == OpenIn.internal) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebViewScreen(
+                    article: favourite.article,
+                  ),
+                ),
+              );
+            } else {
+              if (await canLaunch(favourite.article.url)) {
+                await launch(favourite.article.url);
+              }
+            }
+          },
+          onLongPress: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: bottomSheetShape,
+              builder: (context) => ArticleBottomSheet(
+                article: favourite.article,
+                onUnfavourite: onDelete,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
