@@ -1,47 +1,55 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:rssreader/utils/constants.dart';
+import 'package:rssreader/providers/articles_provider.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/components/article_bottom_sheet.dart';
+import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
-import 'package:rssreader/models/article.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
-import 'package:rssreader/services/networking.dart';
+import 'package:rssreader/utils/constants.dart';
 
-class HomeScreen extends StatefulWidget {
-  final nh = NetworkHelper();
-
+class HomeScreen extends StatelessWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context) {
+    final categories = Provider.of<SubscriptionsProvider>(context).categories;
+    final tabs = ['All', ...categories];
 
-class _HomeScreenState extends State<HomeScreen> {
-  final feedItems = HashSet<Article>();
-
-  @override
-  void initState() {
-    super.initState();
-    refreshFeeds();
+    return DefaultTabController(
+      length: categories.length + 1,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Home'),
+          actions: _appbarActions(context),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(56.0),
+            child: Container(
+              width: double.infinity,
+              child: TabBar(
+                isScrollable: true,
+                tabs: <Widget>[
+                  for (final tab in tabs) Tab(text: tab),
+                ],
+              ),
+            ),
+          ),
+        ),
+        drawer: SideDrawer(),
+        body: TabBarView(
+          children: <Widget>[
+            for (final tab in tabs) _buildList(context, tab),
+          ],
+        ),
+      ),
+    );
   }
 
-  Future<void> refreshFeeds() async {
-    await for (final data in widget.nh.loadFeeds()) {
-      setState(() => feedItems.addAll(data));
-    }
-  }
-
-  Widget _buildList(String category) {
-    final List<Article> articles = feedItems
-        .where((e) => category == 'All' || e.category == category)
-        .toList()
-          ..sort();
+  Widget _buildList(BuildContext context, String category) {
+    final model = Provider.of<ArticlesProvider>(context);
+    final articles = model.getByCategory(category);
 
     return articles.length != 0
         ? Scrollbar(
@@ -52,10 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return Selector<SettingsProvider, OpenIn>(
                     selector: (context, settings) => settings.openIn,
-                    builder: (context, model, child) => ArticleItem(
+                    builder: (context, prov, child) => ArticleItem(
                       article: article,
                       handleTap: () async {
-                        if (model == OpenIn.internal) {
+                        if (prov == OpenIn.internal) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -70,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         }
 
-                        setState(() => article.isRead = true);
+                        model.markAsRead(article);
                       },
                       handleLongPress: () {
                         showModalBottomSheet(
@@ -91,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: articles.length,
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
               ),
-              onRefresh: refreshFeeds,
+              onRefresh: model.refreshAll,
             ),
           )
         : const Center(
@@ -99,15 +107,16 @@ class _HomeScreenState extends State<HomeScreen> {
           );
   }
 
-  List<Widget> _appbarActions() {
+  List<Widget> _appbarActions(BuildContext context) {
     return <Widget>[
       IconButton(
         icon: const Icon(Icons.done_all),
         tooltip: 'Mark all as read',
         onPressed: () {
-          setState(() {
-            feedItems.forEach((item) => item.isRead = true);
-          });
+          Provider.of<ArticlesProvider>(
+            context,
+            listen: false,
+          ).markAllAsRead();
         },
       ),
       _FilterButton(
@@ -119,40 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {},
       ),
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final categories = Provider.of<SubscriptionsProvider>(context).categories;
-    final tabs = ['All', ...categories];
-
-    return DefaultTabController(
-      length: categories.length + 1,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: _appbarActions(),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(48.0),
-            child: Container(
-              width: double.infinity,
-              child: TabBar(
-                isScrollable: true,
-                tabs: <Widget>[
-                  for (final tab in tabs) Tab(text: tab),
-                ],
-              ),
-            ),
-          ),
-        ),
-        drawer: SideDrawer(),
-        body: TabBarView(
-          children: <Widget>[
-            for (final tab in tabs) _buildList(tab),
-          ],
-        ),
-      ),
-    );
   }
 }
 

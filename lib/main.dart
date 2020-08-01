@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:rssreader/providers/articles_provider.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/providers/theme_provider.dart';
-import 'package:rssreader/screens/favourites/favourites_screen.dart';
-import 'package:rssreader/theme/style.dart';
-import 'package:rssreader/screens/home/home_screen.dart';
 import 'package:rssreader/screens/catalog/catalog_screen.dart';
-import 'package:rssreader/screens/sources/sources_screen.dart';
+import 'package:rssreader/screens/favourites/favourites_screen.dart';
+import 'package:rssreader/screens/home/home_screen.dart';
 import 'package:rssreader/screens/settings/settings_screen.dart';
+import 'package:rssreader/screens/sources/sources_screen.dart';
+import 'package:rssreader/theme/style.dart';
 import 'package:rssreader/utils/routes.dart';
 
 void main() {
@@ -42,6 +43,17 @@ class RssReader extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SubscriptionsProvider()),
         ChangeNotifierProvider(create: (context) => FavouritesProvider()),
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProxyProvider<SubscriptionsProvider, ArticlesProvider>(
+          create: (context) => ArticlesProvider(),
+          update: (context, subscriptions, articles) {
+            articles.subscriptions = subscriptions;
+
+            // Remove any unsubscribed
+            articles.prune();
+
+            return articles;
+          },
+        ),
       ],
       child: Builder(
         builder: (context) => MaterialApp(

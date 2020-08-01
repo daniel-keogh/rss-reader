@@ -2,33 +2,36 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:rssreader/models/article.dart';
 import 'package:webfeed/webfeed.dart';
 
-import 'package:rssreader/db/subscriptions_db.dart';
+import 'package:rssreader/models/article.dart';
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/models/subscription.dart';
 
 class NetworkHelper {
   final _client = http.Client();
-  final _db = SubscriptionsDb();
 
-  Stream<List<Article>> loadFeeds() async* {
-    final List<Subscription> subscriptions = await _db.getAll();
-
+  Stream<Iterable<Article>> loadFeeds(
+    Iterable<Subscription> subscriptions,
+  ) async* {
     for (final sub in subscriptions) {
-      try {
-        final response = await _client.get(sub.xmlUrl);
+      yield await loadFeed(sub);
+    }
+  }
 
-        try {
-          yield _parseRss(response.body, sub);
-        } catch (e) {
-          print("$e: ${sub.title} -- ${sub.xmlUrl}");
-          yield _parseAtom(response.body, sub);
-        }
+  Future<Iterable<Article>> loadFeed(Subscription sub) async {
+    try {
+      final response = await _client.get(sub.xmlUrl);
+
+      try {
+        return _parseRss(response.body, sub);
       } catch (e) {
         print("$e: ${sub.title} -- ${sub.xmlUrl}");
+        return _parseAtom(response.body, sub);
       }
+    } catch (e) {
+      print("$e: ${sub.title} -- ${sub.xmlUrl}");
+      return [];
     }
   }
 
@@ -46,6 +49,7 @@ class NetworkHelper {
       }
 
       return Article(
+        subscriptionId: sub.id,
         title: item.title,
         imageUrl: img,
         isRead: false,
@@ -68,6 +72,7 @@ class NetworkHelper {
       }
 
       return Article(
+        subscriptionId: sub.id,
         title: item.title,
         imageUrl: img,
         isRead: false,
