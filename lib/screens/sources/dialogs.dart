@@ -58,7 +58,9 @@ Future<String> showCategoryDialog({
           FlatButton(
             child: const Text('SAVE'),
             onPressed: () => Navigator.of(context).pop(
-              result != currentCategory ? result : null,
+              result.trim().length != 0 && result.trim() != currentCategory
+                  ? result.trim()
+                  : null,
             ),
           ),
         ],
@@ -98,8 +100,8 @@ Future<String> showRenameDialog(
             onPressed: () {
               Navigator.pop(
                 context,
-                result.trim().length != 0 && result != currentCategory
-                    ? result
+                result.trim().length != 0 && result.trim() != currentCategory
+                    ? result.trim()
                     : null,
               );
             },
