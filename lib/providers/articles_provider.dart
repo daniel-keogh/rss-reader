@@ -66,6 +66,18 @@ class ArticlesProvider extends ChangeNotifier {
     );
   }
 
+  UnmodifiableListView<Article> getReadByCategory([String category = 'All']) {
+    return UnmodifiableListView(_articles.where((e) {
+      return ((category == 'All' || e.category == category) && e.isRead);
+    }));
+  }
+
+  UnmodifiableListView<Article> getUnreadByCategory([String category = 'All']) {
+    return UnmodifiableListView(_articles.where((e) {
+      return ((category == 'All' || e.category == category) && !e.isRead);
+    }));
+  }
+
 //  UnmodifiableListView<Article> getBySubscription(Subscription subscription) {
 //    return UnmodifiableListView(
 //      _articles.where((e) => category == 'All' || e. == category),
@@ -83,6 +95,14 @@ class ArticlesProvider extends ChangeNotifier {
   void markAllAsRead() {
     _articles.forEach((e) {
       e.isRead = true;
+    });
+
+    notifyListeners();
+  }
+
+  void markAllAsUnread() {
+    _articles.forEach((e) {
+      e.isRead = false;
     });
 
     notifyListeners();

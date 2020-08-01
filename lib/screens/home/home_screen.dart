@@ -3,16 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:rssreader/models/article.dart';
 import 'package:rssreader/providers/articles_provider.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
+import 'package:rssreader/screens/home/filter_button.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:rssreader/utils/constants.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Filter filter;
+
   @override
   Widget build(BuildContext context) {
     final categories = Provider.of<SubscriptionsProvider>(context).categories;
@@ -25,7 +34,7 @@ class HomeScreen extends StatelessWidget {
           title: const Text('Home'),
           actions: _appbarActions(context),
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(56.0),
+            preferredSize: const Size.fromHeight(56.0),
             child: Container(
               width: double.infinity,
               child: TabBar(
@@ -49,7 +58,16 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildList(BuildContext context, String category) {
     final model = Provider.of<ArticlesProvider>(context);
-    final articles = model.getByCategory(category);
+
+    List<Article> articles;
+
+    if (filter == Filter.read) {
+      articles = model.getReadByCategory(category);
+    } else if (filter == Filter.unread) {
+      articles = model.getUnreadByCategory(category);
+    } else {
+      articles = model.getByCategory(category);
+    }
 
     return articles.length != 0
         ? Scrollbar(
@@ -119,8 +137,10 @@ class HomeScreen extends StatelessWidget {
           ).markAllAsRead();
         },
       ),
-      _FilterButton(
-        onSelected: (value) {},
+      FilterButton(
+        onSelected: (value) {
+          setState(() => filter = value);
+        },
       ),
       IconButton(
         icon: const Icon(Icons.search),
@@ -128,33 +148,5 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {},
       ),
     ];
-  }
-}
-
-class _FilterButton extends StatelessWidget {
-  final Function onSelected;
-
-  _FilterButton({
-    Key key,
-    @required this.onSelected,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      icon: const Icon(Icons.filter_list),
-      tooltip: 'Filter',
-      padding: EdgeInsets.zero,
-      onSelected: onSelected,
-      itemBuilder: (context) {
-        return [
-          for (var i in ['All', 'Read', 'Unread'])
-            PopupMenuItem(
-              child: Text(i),
-              value: i.toLowerCase(),
-            ),
-        ];
-      },
-    );
   }
 }

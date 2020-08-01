@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:rssreader/providers/articles_provider.dart';
 
 import 'package:rssreader/screens/settings/settings_section.dart';
 import 'package:rssreader/providers/settings_provider.dart';
@@ -88,9 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           max: 3000.0,
                           divisions: 5,
                           onChanged: (value) {
-                            setState(() {
-                              currentValue = value;
-                            });
+                            setState(() => currentValue = value);
                           },
                           onChangeEnd: (value) {
                             print(value);
@@ -107,7 +106,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: <Widget>[
                   ListTile(
                     title: const Text("Clear reading history"),
-                    onTap: () {},
+                    onTap: () {
+                      setState(() {
+                        Provider.of<ArticlesProvider>(
+                          context,
+                          listen: false,
+                        ).markAllAsUnread();
+                      });
+                    },
                   ),
                 ],
               ),
