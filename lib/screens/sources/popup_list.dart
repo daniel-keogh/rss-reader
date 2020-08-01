@@ -1,54 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
-import 'package:rssreader/models/subscription.dart';
-import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/screens/sources/dialogs.dart';
-
 enum _Action {
   unsubscribe,
   move,
 }
 
 class PopupList extends StatelessWidget {
-  final Subscription subscription;
-  final Function onUpdate;
+  final Function onMove;
+  final Function onUnsubscribe;
 
   const PopupList({
     Key key,
-    @required this.subscription,
-    @required this.onUpdate,
+    @required this.onMove,
+    @required this.onUnsubscribe,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<SubscriptionsProvider>(
-      context,
-      listen: false,
-    );
-
     return PopupMenuButton<_Action>(
-      itemBuilder: (context) => _itemList(),
+      itemBuilder: (context) => _buildItems(),
       padding: EdgeInsets.zero,
-      onSelected: (value) async {
+      onSelected: (value) {
         switch (value) {
           case _Action.move:
-            final result = await showCategoryDialog(
-              context: context,
-              categories: model.categories,
-              currentCategory: subscription.category,
-            );
-
-            if (result != null && result.trim().length != 0) {
-              onUpdate();
-              model.moveCategory(subscription.id, result.trim());
-            }
+            onMove();
             break;
           case _Action.unsubscribe:
-            onUpdate();
-            model.delete(subscription);
+            onUnsubscribe();
             break;
           default:
             break;
@@ -57,7 +36,7 @@ class PopupList extends StatelessWidget {
     );
   }
 
-  List<PopupMenuItem<_Action>> _itemList() {
+  List<PopupMenuItem<_Action>> _buildItems() {
     return <PopupMenuItem<_Action>>[
       PopupMenuItem<_Action>(
         value: _Action.move,

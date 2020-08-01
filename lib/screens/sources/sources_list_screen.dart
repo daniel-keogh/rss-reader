@@ -147,9 +147,25 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
       ),
       subtitle: Text(item.xmlUrl),
       isThreeLine: true,
-      trailing: PopupList(
-        subscription: item,
-        onUpdate: () => _deleteItem(index),
+      trailing: Consumer<SubscriptionsProvider>(
+        builder: (context, model, child) => PopupList(
+          onMove: () async {
+            final result = await showCategoryDialog(
+              context: context,
+              categories: model.categories,
+              currentCategory: item.category,
+            );
+
+            if (result != null && result.trim().length != 0) {
+              _deleteItem(index);
+              model.moveCategory(item.id, result.trim());
+            }
+          },
+          onUnsubscribe: () {
+            _deleteItem(index);
+            model.delete(item);
+          },
+        ),
       ),
       onLongPress: () {
         setState(() {
