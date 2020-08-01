@@ -6,6 +6,7 @@ import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/screens/sources/dialogs.dart';
 import 'package:rssreader/screens/sources/popup_list.dart';
+import 'package:rssreader/screens/sources/selection_appbar.dart';
 
 class SourcesListScreen extends StatefulWidget {
   final String category;
@@ -41,6 +42,8 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
                     child: AnimatedList(
                       key: _globalKey,
                       itemBuilder: (context, index, animation) {
+                        _checkboxValues[items[index].id] ??= false;
+
                         return SizeTransition(
                           sizeFactor: animation,
                           child: Column(
@@ -71,65 +74,69 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
   }
 
   Widget _buildAppBar(SubscriptionsProvider model, List<Subscription> items) {
-    return !_selectMultiple
-        ? AppBar(
-            title: Text(widget.category),
-          )
-        : AppBar(
-            title: Text(
-              '${_checkboxValues.values.where((e) => e == true).length}',
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.clear),
-              onPressed: _clearSelection,
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.edit),
-                tooltip: 'Move all',
-                onPressed: () async {
-                  final result = await showCategoryDialog(
-                    context: context,
-                    categories: model.categories,
-                    currentCategory: widget.category,
-                  );
+    return SelectionAppBar(
+      title: Text(widget.category),
+      count: _checkboxValues.values.where((e) => e == true).length,
+      enabled: _selectMultiple,
+      onClear: _clearSelection,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.select_all),
+          tooltip: 'Select all',
+          onPressed: () {
+            setState(() {
+              _checkboxValues.forEach(
+                (key, value) => _checkboxValues[key] = true,
+              );
+            });
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.edit),
+          tooltip: 'Move all',
+          onPressed: () async {
+            final result = await showCategoryDialog(
+              context: context,
+              categories: model.categories,
+              currentCategory: widget.category,
+            );
 
-                  if (result != null && result.trim().length != 0) {
-                    _checkboxValues.forEach((key, value) {
-                      if (value) {
-                        int index = items.indexWhere((e) => e.id == key);
+            if (result != null && result.trim().length != 0) {
+              _checkboxValues.forEach((key, value) {
+                if (value) {
+                  int index = items.indexWhere((e) => e.id == key);
 
-                        _deleteItem(index);
-                        items.removeAt(index);
+                  _deleteItem(index);
+                  items.removeAt(index);
 
-                        model.moveCategory(key, result.trim());
-                      }
-                    });
-                  }
+                  model.moveCategory(key, result.trim());
+                }
+              });
+            }
 
-                  _clearSelection();
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.delete_sweep),
-                tooltip: 'Delete all',
-                onPressed: () {
-                  _checkboxValues.forEach((key, value) {
-                    if (value) {
-                      int index = items.indexWhere((e) => e.id == key);
+            _clearSelection();
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.delete_sweep),
+          tooltip: 'Delete all',
+          onPressed: () {
+            _checkboxValues.forEach((key, value) {
+              if (value) {
+                int index = items.indexWhere((e) => e.id == key);
 
-                      _deleteItem(index);
-                      items.removeAt(index);
+                _deleteItem(index);
+                items.removeAt(index);
 
-                      model.deleteById(key);
-                    }
-                  });
+                model.deleteById(key);
+              }
+            });
 
-                  _clearSelection();
-                },
-              )
-            ],
-          );
+            _clearSelection();
+          },
+        ),
+      ],
+    );
   }
 
   _buildListTile(Subscription item, int index) {
@@ -139,6 +146,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
         child: Text(item.title),
       ),
       subtitle: Text(item.xmlUrl),
+      isThreeLine: true,
       trailing: PopupList(
         subscription: item,
         onUpdate: () => _deleteItem(index),
@@ -149,11 +157,6 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
           _checkboxValues[item.id] = true;
         });
       },
-      contentPadding: const EdgeInsets.only(
-        top: 4.0,
-        bottom: 4.0,
-        left: 12.0,
-      ),
     );
   }
 
@@ -164,7 +167,8 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
         child: Text(item.title),
       ),
       subtitle: Text(item.xmlUrl),
-      value: _checkboxValues[item.id] ?? false,
+      isThreeLine: true,
+      value: _checkboxValues[item.id],
       onChanged: (bool value) {
         setState(() => _checkboxValues[item.id] = value);
       },
@@ -177,7 +181,10 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
       index,
       (context, animation) => SizeTransition(
         sizeFactor: animation,
-        child: const ListTile(),
+        child: Container(
+          color: Colors.grey.withOpacity(0.1),
+          child: const ListTile(),
+        ),
       ),
     );
   }

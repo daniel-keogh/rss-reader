@@ -72,7 +72,10 @@ class FavouritesScreen extends StatelessWidget {
       index,
       (context, animation) => SizeTransition(
         sizeFactor: animation,
-        child: const ListTile(),
+        child: Container(
+          color: Colors.grey.withOpacity(0.1),
+          child: const ListTile(),
+        ),
       ),
     );
   }
