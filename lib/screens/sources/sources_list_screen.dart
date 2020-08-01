@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/screens/sources/selectable_tile.dart';
 import 'package:rssreader/screens/sources/dialogs.dart';
@@ -63,16 +64,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
                 );
 
                 if (result != null) {
-                  _checkboxValues.forEach((key, value) {
-                    if (value) {
-                      int index = items.indexWhere((e) => e.id == key);
-
-                      _deleteItem(index);
-                      items.removeAt(index);
-
-                      model.moveCategory(key, result);
-                    }
-                  });
+                  _forSelected(items, (key) => model.moveCategory(key, result));
                 }
 
                 _clearSelection();
@@ -82,17 +74,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
               icon: Icon(Icons.delete_sweep),
               tooltip: 'Delete all',
               onPressed: () {
-                _checkboxValues.forEach((key, value) {
-                  if (value) {
-                    int index = items.indexWhere((e) => e.id == key);
-
-                    _deleteItem(index);
-                    items.removeAt(index);
-
-                    model.deleteById(key);
-                  }
-                });
-
+                _forSelected(items, (key) => model.deleteById(key));
                 _clearSelection();
               },
             ),
@@ -169,6 +151,19 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
         ),
       ),
     );
+  }
+
+  void _forSelected(List<Subscription> items, Function func) {
+    _checkboxValues.forEach((key, value) {
+      if (value) {
+        int index = items.indexWhere((e) => e.id == key);
+
+        _deleteItem(index);
+        items.removeAt(index);
+
+        func(key);
+      }
+    });
   }
 
   void _clearSelection() {
