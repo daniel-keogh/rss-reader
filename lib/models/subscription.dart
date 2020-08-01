@@ -44,11 +44,10 @@ class Subscription implements Comparable<Subscription> {
       other is Subscription &&
           runtimeType == other.runtimeType &&
           title == other.title &&
-          category == other.category &&
           xmlUrl == other.xmlUrl;
 
   @override
-  int get hashCode => title.hashCode ^ category.hashCode ^ xmlUrl.hashCode;
+  int get hashCode => title.hashCode ^ xmlUrl.hashCode;
 
   @override
   String toString() {

@@ -78,7 +78,7 @@ class SubscriptionsProvider extends ChangeNotifier {
     // Only true if `sub` was in `_subscriptions`
     if (_subscriptions.remove(sub)) {
       try {
-        _db.deleteByXmlUrl(sub.xmlUrl);
+        _db.deleteById(sub.id);
       } catch (e) {
         // TODO:
         print(e);
