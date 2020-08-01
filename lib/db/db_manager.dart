@@ -44,10 +44,26 @@ class DbManager {
           CREATE TABLE IF NOT EXISTS "favourites" (
             "id" INTEGER PRIMARY KEY AUTOINCREMENT,
             "title" TEXT NOT NULL,
+            "url" TEXT NOT NULL UNIQUE,
             "imageUrl" TEXT,
             "publisher" TEXT NOT NULL,
+            "date" TEXT NOT NULL
+          );
+          """,
+        );
+
+        batch.execute(
+          """
+          CREATE TABLE IF NOT EXISTS "articles" (
+            "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+            "subscriptionId" INTEGER NOT NULL,
+            "title" TEXT NOT NULL,
+            "url" TEXT NOT NULL UNIQUE,
+            "imageUrl" TEXT,
+            "publisher" TEXT NOT NULL,
+            "category" TEXT NOT NULL,
             "date" TEXT NOT NULL,
-            "url" TEXT NOT NULL UNIQUE
+            "isRead" INTEGER NOT NULL
           );
           """,
         );
