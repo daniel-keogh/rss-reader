@@ -11,7 +11,7 @@ import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/screens/sources/dialogs.dart';
 import 'package:rssreader/screens/sources/sources_list_screen.dart';
-import 'package:rssreader/services/opml.dart';
+import 'package:rssreader/services/opml_service.dart';
 import 'package:rssreader/utils/constants.dart';
 import 'package:rssreader/utils/routes.dart';
 
@@ -38,7 +38,7 @@ class SourcesScreen extends StatelessWidget {
           icon: const Icon(Icons.save_alt),
           tooltip: 'Export OPML',
           onPressed: () async {
-            File file = await Opml.export();
+            File file = await OpmlService.export();
 
             if (file != null) {
               Scaffold.of(context).showSnackBar(
@@ -162,7 +162,7 @@ class SourcesScreen extends StatelessWidget {
               leading: const Icon(Icons.attach_file),
               title: const Text("Import OPML file"),
               onTap: () async {
-                final List<Subscription> subs = await Opml.import();
+                final List<Subscription> subs = await OpmlService.import();
 
                 if (subs.length > 0) {
                   Provider.of<SubscriptionsProvider>(

@@ -44,6 +44,11 @@ dependencies:
   webview_flutter: ^0.3.22+1
   xml: ^3.6.1
 
+  opml:
+    git:
+      url: https://github.com/daniel-keogh/opml.git
+      ref: master
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
