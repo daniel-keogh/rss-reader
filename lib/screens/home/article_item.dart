@@ -23,7 +23,7 @@ class ArticleItem extends StatelessWidget {
         const Radius.circular(4),
       ),
       child: SizedBox(
-        width: 125.0,
+        width: 120.0,
         child: CachedNetworkImage(
           imageUrl: article.imageUrl,
           fit: BoxFit.cover,
@@ -71,8 +71,10 @@ class ArticleItem extends StatelessWidget {
                           const SizedBox(height: 8.0),
                           Text(
                             article.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16.5,
+                              color:
+                                  article.isRead ? Colors.grey : Colors.black,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -82,9 +84,9 @@ class ArticleItem extends StatelessWidget {
                     if (article.imageUrl != null)
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: 12.0,
+                          left: 10.0,
                           bottom: 12.0,
-                          right: 20.0,
+                          right: 18.0,
                         ),
                         child: _buildImage(),
                       ),
