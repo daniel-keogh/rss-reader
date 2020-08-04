@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return articles.length != 0
         ? Scrollbar(
             child: RefreshIndicator(
-              child: ListView.separated(
+              child: ListView.builder(
                 itemBuilder: (context, index) {
                   var article = articles[index];
 
@@ -112,11 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                separatorBuilder: (context, index) {
-                  return const Divider(thickness: 0.5);
-                },
                 itemCount: articles.length,
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
               ),
               onRefresh: model.refreshAll,
             ),
