@@ -32,7 +32,7 @@ class _CategoryScreenState extends State<CategoryScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 600),
     );
 
     _animation = Tween(
@@ -57,19 +57,35 @@ class _CategoryScreenState extends State<CategoryScreen>
           SliverAppBar(
             expandedHeight: 200.0,
             floating: false,
+            title: Text(widget.category),
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: FadeTransition(
-                opacity: _animation,
-                child: Text(widget.category),
-              ),
-              background: Hero(
-                tag: widget.photo.title,
-                child: Image.asset(
-                  widget.photo.asset,
-                  fit: BoxFit.cover,
-                ),
+              background: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  Hero(
+                    tag: widget.photo.title,
+                    child: Image.asset(
+                      widget.photo.asset,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  FadeTransition(
+                    opacity: _animation,
+                    child: const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment(0, .2),
+                          colors: <Color>[
+                            Color(0xc0000000),
+                            Color(0x00000000),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

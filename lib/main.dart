@@ -26,7 +26,7 @@ void main() {
 }
 
 class RssReader extends StatelessWidget {
-  static const String _title = 'RSS Reader';
+  static const String title = 'RSS Reader';
 
   final ActiveTheme activeTheme;
 
@@ -57,7 +57,7 @@ class RssReader extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) => MaterialApp(
-          title: RssReader._title,
+          title: RssReader.title,
           theme: Provider.of<ThemeProvider>(context).theme == ActiveTheme.light
               ? Style.getThemeData()
               : Style.getDarkThemeData(),
