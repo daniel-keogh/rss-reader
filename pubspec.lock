@@ -479,7 +479,7 @@ packages:
     source: hosted
     version: "0.1.0"
   xml:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: xml
       url: "https://pub.dartlang.org"

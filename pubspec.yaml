@@ -42,7 +42,6 @@ dependencies:
   url_launcher: ^5.4.11
   webfeed: ^0.4.2
   webview_flutter: ^0.3.22+1
-  xml: ^3.6.1
 
   opml:
     git:
