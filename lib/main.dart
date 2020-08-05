@@ -46,11 +46,8 @@ class RssReader extends StatelessWidget {
         ChangeNotifierProxyProvider<SubscriptionsProvider, ArticlesProvider>(
           create: (context) => ArticlesProvider(),
           update: (context, subscriptions, articles) {
-            articles.subscriptions = subscriptions;
-
-            // Remove any unsubscribed
-            articles.prune();
-
+            articles.subsProv = subscriptions;
+            articles.update();
             return articles;
           },
         ),

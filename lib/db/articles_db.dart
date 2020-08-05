@@ -13,27 +13,18 @@ class ArticlesDb {
   static const String _COLUMN_TITLE = "title";
   static const String _COLUMN_URL = "url";
   static const String _COLUMN_IMAGE = "imageUrl";
-  static const String _COLUMN_PUBLISHER = "publisher";
-  static const String _COLUMN_CATEGORY = "category";
   static const String _COLUMN_DATE = "date";
   static const String _COLUMN_IS_READ = "isRead";
 
   Future<Iterable<Article>> getAll() async {
     final db = await _db.database;
 
-    final articles = await db.query(
-      _TABLE_ARTICLES,
-      columns: [
-        _COLUMN_ID,
-        _COLUMN_SUB_ID,
-        _COLUMN_TITLE,
-        _COLUMN_URL,
-        _COLUMN_IMAGE,
-        _COLUMN_PUBLISHER,
-        _COLUMN_CATEGORY,
-        _COLUMN_DATE,
-        _COLUMN_IS_READ,
-      ],
+    final articles = await db.rawQuery(
+      """
+      SELECT a.*, s.title AS "publisher", s.category
+      FROM articles a JOIN subscriptions s
+      ON a.subscriptionId = s.id
+      """,
     );
 
     return articles.map((e) => Article.fromMap(e));
@@ -65,26 +56,26 @@ class ArticlesDb {
     return items;
   }
 
-  Future<void> updateReadStatus(Article article) async {
-    final Database db = await _db.database;
+  Future<int> updateReadStatus(Article article) async {
+    final db = await _db.database;
 
-    await db.update(
+    return await db.update(
       _TABLE_ARTICLES,
       {
-        "isRead": article.isRead ? 1 : 0,
+        _COLUMN_IS_READ: article.isRead ? 1 : 0,
       },
       where: '$_COLUMN_ID = ?',
       whereArgs: [article.id],
     );
   }
 
-  Future<void> updateAllReadStatus(bool status) async {
-    final Database db = await _db.database;
+  Future<int> updateAllReadStatus(bool status) async {
+    final db = await _db.database;
 
-    await db.update(
+    return await db.update(
       _TABLE_ARTICLES,
       {
-        "isRead": status ? 1 : 0,
+        _COLUMN_IS_READ: status ? 1 : 0,
       },
     );
   }

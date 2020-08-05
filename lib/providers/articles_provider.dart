@@ -9,9 +9,9 @@ import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/services/networking.dart';
 
 class ArticlesProvider extends ChangeNotifier {
-  Set<Article> _articles = SplayTreeSet<Article>();
+  Set<Article> _articles = LinkedHashSet<Article>();
 
-  SubscriptionsProvider subscriptions;
+  SubscriptionsProvider subsProv;
 
   final _db = ArticlesDb();
   final _nh = NetworkHelper();
@@ -21,9 +21,7 @@ class ArticlesProvider extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    _articles = SplayTreeSet<Article>.from(
-      await _db.getAll(),
-    );
+    _articles.addAll(await _db.getAll());
 
     notifyListeners();
 
@@ -40,7 +38,7 @@ class ArticlesProvider extends ChangeNotifier {
   }
 
   Future<void> refreshAll() async {
-    await for (final data in _nh.loadFeeds(subscriptions.subscriptions)) {
+    await for (final data in _nh.loadFeeds(subsProv.subscriptions)) {
       _articles.addAll(data);
       _db.insertAll(_articles);
 
@@ -49,31 +47,43 @@ class ArticlesProvider extends ChangeNotifier {
   }
 
   UnmodifiableListView<Article> get articles {
-    return UnmodifiableListView(_articles);
+    return UnmodifiableListView(
+      _articles.toList()..sort(),
+    );
   }
 
   UnmodifiableListView<Article> getBySubscription(Subscription subscription) {
     return UnmodifiableListView(
-      _articles.where((e) => e.subscriptionId == subscription.id),
+      _articles.where((e) => e.subscriptionId == subscription.id).toList()
+        ..sort(),
     );
   }
 
   UnmodifiableListView<Article> getByCategory([String category = 'All']) {
     return UnmodifiableListView(
-      _articles.where((e) => category == 'All' || e.category == category),
+      _articles
+          .where((e) => category == 'All' || e.category == category)
+          .toList()
+            ..sort(),
     );
   }
 
   UnmodifiableListView<Article> getReadByCategory([String category = 'All']) {
-    return UnmodifiableListView(_articles.where((e) {
-      return ((category == 'All' || e.category == category) && e.isRead);
-    }));
+    return UnmodifiableListView(
+      _articles
+          .where((e) =>
+              ((category == 'All' || e.category == category) && e.isRead))
+          .toList()
+            ..sort(),
+    );
   }
 
   UnmodifiableListView<Article> getUnreadByCategory([String category = 'All']) {
-    return UnmodifiableListView(_articles.where((e) {
-      return ((category == 'All' || e.category == category) && !e.isRead);
-    }));
+    return UnmodifiableListView(
+      _articles.where(
+        (e) => ((category == 'All' || e.category == category) && !e.isRead),
+      ),
+    );
   }
 
   void markAsRead(Article article) {
@@ -94,10 +104,19 @@ class ArticlesProvider extends ChangeNotifier {
     _db.updateAllReadStatus(isRead);
   }
 
-  void prune() {
-    final ids = subscriptions.subscriptions.map((e) => e.id).toSet();
+  void update() {
+    final subs = subsProv.subscriptions;
+    final ids = subs.map((e) => e.id).toSet();
 
-    _articles.retainWhere((e) => ids.contains(e.subscriptionId));
+    _articles
+      ..retainWhere((e) => ids.contains(e.subscriptionId))
+      ..forEach((e) {
+        subs.forEach((sub) {
+          if (sub.id == e.subscriptionId) {
+            e.category = sub.category;
+          }
+        });
+      });
 
     notifyListeners();
   }

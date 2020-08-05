@@ -4,10 +4,10 @@ class Article implements Comparable<Article> {
   final String title;
   final String url;
   final String imageUrl;
-  final String publisher;
-  final String category;
   final DateTime date;
   bool isRead;
+  final String publisher;
+  String category;
 
   Article({
     this.id,
@@ -15,10 +15,10 @@ class Article implements Comparable<Article> {
     this.title,
     this.url,
     this.imageUrl,
-    this.publisher,
-    this.category,
     this.date,
     this.isRead,
+    this.publisher,
+    this.category,
   });
 
   Article.fromMap(Map<String, dynamic> map)
@@ -28,20 +28,18 @@ class Article implements Comparable<Article> {
           title: map["title"],
           url: map["url"],
           imageUrl: map["imageUrl"],
-          publisher: map["publisher"],
-          category: map["category"],
           date: DateTime.parse(map["date"]),
           isRead: map["isRead"] == 1,
+          publisher: map["publisher"],
+          category: map["category"],
         );
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
+    final map = <String, dynamic>{
       "subscriptionId": subscriptionId,
       "title": title,
       "url": url,
       "imageUrl": imageUrl,
-      "publisher": publisher,
-      "category": category,
       "date": date.toIso8601String(),
       "isRead": isRead ? 1 : 0,
     };
@@ -62,10 +60,10 @@ class Article implements Comparable<Article> {
       title: $title, 
       url: $url,
       imageUrl: $imageUrl,
-      publisher: $publisher,
-      category: $category,
       date: ${date.toIso8601String()},
-      isRead: $isRead 
+      isRead: $isRead,
+      publisher: $publisher,
+      category: $category
     }""";
   }
 

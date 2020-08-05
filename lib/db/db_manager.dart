@@ -64,8 +64,6 @@ class DbManager {
             "title" TEXT NOT NULL,
             "url" TEXT NOT NULL UNIQUE,
             "imageUrl" TEXT,
-            "publisher" TEXT NOT NULL,
-            "category" TEXT NOT NULL,
             "date" TEXT NOT NULL,
             "isRead" INTEGER NOT NULL,
             FOREIGN KEY(subscriptionId) REFERENCES subscriptions(id) ON DELETE CASCADE
