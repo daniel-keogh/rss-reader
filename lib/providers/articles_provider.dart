@@ -14,7 +14,7 @@ class ArticlesProvider extends ChangeNotifier {
   SubscriptionsProvider subscriptions;
 
   final _db = ArticlesDb();
-  final NetworkHelper _nh = NetworkHelper();
+  final _nh = NetworkHelper();
 
   ArticlesProvider() {
     _init();
@@ -32,7 +32,9 @@ class ArticlesProvider extends ChangeNotifier {
 
   Future<void> refresh(Subscription subscription) async {
     final data = await _nh.loadFeed(subscription);
+
     _articles.addAll(data);
+    _db.insertAll(_articles);
 
     notifyListeners();
   }
@@ -40,24 +42,14 @@ class ArticlesProvider extends ChangeNotifier {
   Future<void> refreshAll() async {
     await for (final data in _nh.loadFeeds(subscriptions.subscriptions)) {
       _articles.addAll(data);
+      _db.insertAll(_articles);
+
       notifyListeners();
     }
   }
 
   UnmodifiableListView<Article> get articles {
     return UnmodifiableListView(_articles);
-  }
-
-  UnmodifiableListView<Article> get unread {
-    final unread = _articles.where((e) => e.isRead = false);
-
-    return UnmodifiableListView(unread);
-  }
-
-  UnmodifiableListView<Article> get read {
-    final read = _articles.where((e) => e.isRead = true);
-
-    return UnmodifiableListView(read);
   }
 
   UnmodifiableListView<Article> getBySubscription(Subscription subscription) {
@@ -84,34 +76,22 @@ class ArticlesProvider extends ChangeNotifier {
     }));
   }
 
-//  UnmodifiableListView<Article> getBySubscription(Subscription subscription) {
-//    return UnmodifiableListView(
-//      _articles.where((e) => category == 'All' || e. == category),
-//    );
-//  }
-
   void markAsRead(Article article) {
     final a = _articles.firstWhere((e) => e.url == article.url);
 
     a.isRead = true;
 
     notifyListeners();
+
+    _db.updateReadStatus(article);
   }
 
-  void markAllAsRead() {
-    _articles.forEach((e) {
-      e.isRead = true;
-    });
+  void updateStatus(bool isRead) {
+    _articles.forEach((e) => e.isRead = isRead);
 
     notifyListeners();
-  }
 
-  void markAllAsUnread() {
-    _articles.forEach((e) {
-      e.isRead = false;
-    });
-
-    notifyListeners();
+    _db.updateAllReadStatus(isRead);
   }
 
   void prune() {

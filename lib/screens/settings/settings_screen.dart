@@ -111,7 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Provider.of<ArticlesProvider>(
                           context,
                           listen: false,
-                        ).markAllAsUnread();
+                        ).updateStatus(false);
                       });
                     },
                   ),

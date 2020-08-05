@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Provider.of<ArticlesProvider>(
             context,
             listen: false,
-          ).markAllAsRead();
+          ).updateStatus(true);
         },
       ),
       FilterButton(

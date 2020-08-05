@@ -31,7 +31,7 @@ class Article implements Comparable<Article> {
           publisher: map["publisher"],
           category: map["category"],
           date: DateTime.parse(map["date"]),
-          isRead: map["isRead"] == 1 ? true : false,
+          isRead: map["isRead"] == 1,
         );
 
   Map<String, dynamic> toMap() {

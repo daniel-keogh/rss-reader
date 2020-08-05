@@ -25,6 +25,10 @@ class DbManager {
     return await openDatabase(
       join(dbPath, 'rssreader.sqlite'),
       version: 1,
+      onConfigure: (db) async {
+        // Enable foreign keys
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
       onCreate: (db, version) async {
         final Batch batch = db.batch();
 
@@ -63,7 +67,8 @@ class DbManager {
             "publisher" TEXT NOT NULL,
             "category" TEXT NOT NULL,
             "date" TEXT NOT NULL,
-            "isRead" INTEGER NOT NULL
+            "isRead" INTEGER NOT NULL,
+            FOREIGN KEY(subscriptionId) REFERENCES subscriptions(id) ON DELETE CASCADE
           );
           """,
         );

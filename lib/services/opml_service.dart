@@ -17,7 +17,7 @@ class OpmlService {
 
     final opmlBody = <OpmlOutline>[];
 
-    Set<String> categories = Set.from(
+    final categories = Set<String>.from(
       subscriptions.map((item) => item.category),
     );
 
@@ -85,7 +85,7 @@ class OpmlService {
     try {
       final imported = <Subscription>[];
 
-      final String xml = await file.readAsString();
+      final xml = await file.readAsString();
       final opml = OpmlDocument.parse(xml);
 
       opml.body.forEach((outline) {
