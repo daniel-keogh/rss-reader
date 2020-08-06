@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
+import 'package:rssreader/components/article_bottom_sheet.dart';
+import 'package:rssreader/providers/articles_provider.dart';
+import 'package:rssreader/screens/webview/webview_screen.dart';
+import 'package:rssreader/utils/constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:rssreader/models/article.dart';
+import 'package:rssreader/providers/settings_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArticleItem extends StatelessWidget {
   final Article article;
-  final Function handleTap;
-  final Function handleLongPress;
+  final OpenIn openIn;
 
   ArticleItem({
     Key key,
     @required this.article,
-    @required this.handleTap,
-    @required this.handleLongPress,
+    @required this.openIn,
   }) : super(key: key);
 
   Widget _buildImage() {
@@ -29,8 +34,11 @@ class ArticleItem extends StatelessWidget {
           fit: BoxFit.cover,
           fadeInDuration: const Duration(milliseconds: 250),
           errorWidget: (context, url, error) => Container(
-            child: const Center(
-              child: Icon(Icons.error),
+            child: SizedBox(
+              height: 80.0,
+              child: const Center(
+                child: Icon(Icons.error),
+              ),
             ),
             color: Colors.black.withOpacity(0.2),
           ),
@@ -106,21 +114,54 @@ class ArticleItem extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.more_vert),
                       color: Colors.grey,
-                      onPressed: handleLongPress,
+                      onPressed: () => _openBottomSheet(context),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          onTap: handleTap,
-          onLongPress: handleLongPress,
+          onTap: () => _handleTap(context),
+          onLongPress: () => _openBottomSheet(context),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: const Divider(height: 0),
         ),
       ],
+    );
+  }
+
+  _handleTap(BuildContext context) async {
+    if (openIn == OpenIn.internal) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(
+            article: article,
+          ),
+        ),
+      );
+    } else {
+      if (await canLaunch(article.url)) {
+        await launch(article.url);
+      }
+    }
+
+    Provider.of<ArticlesProvider>(
+      context,
+      listen: false,
+    ).markAsRead(article);
+  }
+
+  _openBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: bottomSheetShape,
+      builder: (context) => ArticleBottomSheet(
+        article: article,
+      ),
     );
   }
 }

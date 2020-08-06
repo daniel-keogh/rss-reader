@@ -19,7 +19,7 @@ class FavouritesScreen extends StatelessWidget {
     return Consumer<FavouritesProvider>(
       builder: (context, model, child) {
         final favs = model.favourites;
-        final hasItems = favs.length != null && favs.isNotEmpty;
+        final hasItems = favs != null && favs.isNotEmpty;
 
         return Scaffold(
           appBar: AppBar(
@@ -32,9 +32,9 @@ class FavouritesScreen extends StatelessWidget {
                   onPressed: () async {
                     final confirmed = await showConfirmDialog(
                       context: context,
-                      title: 'Delete',
+                      title: 'Clear',
                       message:
-                          'Are you sure you want to delete all your favourites?',
+                          'Are you sure you want to clear all your favourites?',
                     );
 
                     if (confirmed) {

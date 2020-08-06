@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:rssreader/components/app_search_delegate.dart';
+import 'package:rssreader/components/article_list.dart';
 import 'package:rssreader/models/article.dart';
-import 'package:rssreader/screens/home/article_item.dart';
 
 class ArticleSearch extends AppSearchDelegate {
   final List<Article> articles;
@@ -48,14 +48,8 @@ class ArticleSearch extends AppSearchDelegate {
     }
 
     return Scrollbar(
-      child: ListView.builder(
-        itemBuilder: (context, index) => ArticleItem(
-          article: results[index],
-          handleTap: onResultTap,
-          handleLongPress: onResultLongPress,
-        ),
-        itemCount: results.length,
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: ArticleList(
+        articles: results,
       ),
     );
   }

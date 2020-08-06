@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import 'package:rssreader/components/article_bottom_sheet.dart';
+import 'package:rssreader/components/article_list.dart';
 import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/models/article.dart';
 import 'package:rssreader/providers/articles_provider.dart';
-import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/screens/home/article_item.dart';
-import 'package:rssreader/screens/home/filter_button.dart';
-import 'package:rssreader/screens/home/article_search.dart';
-import 'package:rssreader/screens/webview/webview_screen.dart';
-import 'package:rssreader/utils/constants.dart';
+import 'package:rssreader/screens/home/home_tab_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,31 +15,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Filter filter;
+  Filter _filter = Filter.unread;
 
   @override
   Widget build(BuildContext context) {
-    final categories = Provider.of<SubscriptionsProvider>(context).categories;
-    final tabs = ['All', ...categories];
+    final tabs = [
+      'All',
+      ...Provider.of<SubscriptionsProvider>(context).categories
+    ];
 
     return DefaultTabController(
-      length: categories.length + 1,
+      length: tabs.length,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: _appbarActions(context),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(56.0),
-            child: Container(
-              width: double.infinity,
-              child: TabBar(
-                isScrollable: true,
-                tabs: <Widget>[
-                  for (final tab in tabs) Tab(text: tab),
-                ],
-              ),
-            ),
-          ),
+        appBar: HomeTabBar(
+          tabs: tabs,
+          filter: _filter,
+          onFilterChanged: (value) {
+            print(value);
+            setState(() => _filter = value);
+          },
         ),
         drawer: SideDrawer(),
         body: TabBarView(
@@ -58,102 +46,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildList(BuildContext context, String category) {
-    final model = Provider.of<ArticlesProvider>(context);
+    return Consumer<ArticlesProvider>(
+      builder: (context, model, child) {
+        List<Article> articles;
 
-    List<Article> articles;
+        if (_filter == Filter.read) {
+          articles = model.getReadByCategory(category);
+        } else if (_filter == Filter.unread) {
+          articles = model.getUnreadByCategory(category);
+        } else {
+          articles = model.getByCategory(category);
+        }
 
-    if (filter == Filter.read) {
-      articles = model.getReadByCategory(category);
-    } else if (filter == Filter.unread) {
-      articles = model.getUnreadByCategory(category);
-    } else {
-      articles = model.getByCategory(category);
-    }
-
-    return articles.isNotEmpty
-        ? Scrollbar(
+        if (articles.isNotEmpty) {
+          return Scrollbar(
             child: RefreshIndicator(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  var article = articles[index];
-
-                  return Selector<SettingsProvider, OpenIn>(
-                    selector: (context, settings) => settings.openIn,
-                    builder: (context, prov, child) => ArticleItem(
-                      article: article,
-                      handleTap: () async {
-                        if (prov == OpenIn.internal) {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WebViewScreen(
-                                article: article,
-                              ),
-                            ),
-                          );
-                        } else {
-                          if (await canLaunch(article.url)) {
-                            await launch(article.url);
-                          }
-                        }
-
-                        model.markAsRead(article);
-                      },
-                      handleLongPress: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: bottomSheetShape,
-                          builder: (context) => ArticleBottomSheet(
-                            article: article,
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-                itemCount: articles.length,
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-              ),
+              child: ArticleList(articles: articles),
               onRefresh: model.refreshAll,
             ),
-          )
-        : const Center(
+          );
+        } else {
+          return const Center(
             child: CircularProgressIndicator(),
           );
-  }
-
-  List<Widget> _appbarActions(BuildContext context) {
-    return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.done_all),
-        tooltip: 'Mark all as read',
-        onPressed: () {
-          Provider.of<ArticlesProvider>(
-            context,
-            listen: false,
-          ).updateStatus(true);
-        },
-      ),
-      FilterButton(
-        onSelected: (value) {
-          setState(() => filter = value);
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.search),
-        tooltip: 'Search',
-        onPressed: () {
-          final model = Provider.of<ArticlesProvider>(context, listen: false);
-
-          showSearch(
-            context: context,
-            delegate: ArticleSearch(
-              articles: model.articles,
-            ),
-          );
-        },
-      ),
-    ];
+        }
+      },
+    );
   }
 }
