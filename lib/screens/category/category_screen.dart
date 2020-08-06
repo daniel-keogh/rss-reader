@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/screens/category/search_item.dart';
-import 'package:rssreader/screens/category/search_page.dart';
+import 'package:rssreader/screens/category/feed_seach.dart';
 import 'package:rssreader/services/networking.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -66,7 +66,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                 tooltip: 'Search',
                 onPressed: () => showSearch(
                   context: context,
-                  delegate: SearchPage(),
+                  delegate: FeedSearch(),
                 ),
               ),
             ],

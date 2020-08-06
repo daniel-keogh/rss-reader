@@ -11,7 +11,7 @@ import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/screens/home/filter_button.dart';
-import 'package:rssreader/screens/home/search_page.dart';
+import 'package:rssreader/screens/home/article_search.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:rssreader/utils/constants.dart';
 

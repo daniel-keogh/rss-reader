@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/screens/catalog/catalog_item.dart';
 import 'package:rssreader/screens/category/category_screen.dart';
-import 'package:rssreader/screens/category/search_page.dart';
+import 'package:rssreader/screens/category/feed_seach.dart';
 
 class CatalogScreen extends StatelessWidget {
   static const String _path = 'assets/catalog';
@@ -62,7 +62,7 @@ class CatalogScreen extends StatelessWidget {
             tooltip: 'Search',
             onPressed: () => showSearch(
               context: context,
-              delegate: SearchPage(),
+              delegate: FeedSearch(),
             ),
           ),
         ],
