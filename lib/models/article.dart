@@ -23,29 +23,29 @@ class Article implements Comparable<Article> {
 
   Article.fromMap(Map<String, dynamic> map)
       : this(
-          id: map["id"],
-          subscriptionId: map["subscriptionId"],
-          title: map["title"],
-          url: map["url"],
-          imageUrl: map["imageUrl"],
-          date: DateTime.parse(map["date"]),
-          isRead: map["isRead"] == 1,
-          publisher: map["publisher"],
-          category: map["category"],
+          id: map['id'],
+          subscriptionId: map['subscriptionId'],
+          title: map['title'],
+          url: map['url'],
+          imageUrl: map['imageUrl'],
+          date: DateTime.parse(map['date']),
+          isRead: map['isRead'] == 1,
+          publisher: map['publisher'],
+          category: map['category'],
         );
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
-      "subscriptionId": subscriptionId,
-      "title": title,
-      "url": url,
-      "imageUrl": imageUrl,
-      "date": date.toIso8601String(),
-      "isRead": isRead ? 1 : 0,
+      'subscriptionId': subscriptionId,
+      'title': title,
+      'url': url,
+      'imageUrl': imageUrl,
+      'date': date.toIso8601String(),
+      'isRead': isRead ? 1 : 0,
     };
 
     if (id != null) {
-      map["id"] = id;
+      map['id'] = id;
     }
 
     return map;

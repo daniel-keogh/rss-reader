@@ -38,7 +38,7 @@ class SourcesScreen extends StatelessWidget {
           icon: const Icon(Icons.save_alt),
           tooltip: 'Export OPML',
           onPressed: () async {
-            File file = await OpmlService.export();
+            final file = await OpmlService.export();
 
             if (file != null) {
               Scaffold.of(context).showSnackBar(
@@ -63,7 +63,7 @@ class SourcesScreen extends StatelessWidget {
       builder: (context, model, child) {
         if (model.categories.length == null || model.categories.length == 0) {
           return const Center(
-            child: const Text('You are not subscribed to any feeds.'),
+            child: Text('You are not subscribed to any feeds.'),
           );
         }
 
@@ -92,10 +92,10 @@ class SourcesScreen extends StatelessWidget {
                     isScrollControlled: true,
                     shape: bottomSheetShape,
                     builder: (context) => RoundedBottomSheet(
-                      tiles: <ListTile>[
+                      children: <ListTile>[
                         ListTile(
                           leading: const Icon(Icons.edit),
-                          title: const Text("Rename"),
+                          title: const Text('Rename'),
                           onTap: () async {
                             Navigator.pop(context);
 
@@ -111,7 +111,7 @@ class SourcesScreen extends StatelessWidget {
                         ),
                         ListTile(
                           leading: const Icon(Icons.delete_sweep),
-                          title: const Text("Delete Feeds"),
+                          title: const Text('Delete Feeds'),
                           onTap: () async {
                             Navigator.pop(context);
 
@@ -148,10 +148,10 @@ class SourcesScreen extends StatelessWidget {
       shape: bottomSheetShape,
       builder: (context) {
         return RoundedBottomSheet(
-          tiles: <ListTile>[
+          children: <ListTile>[
             ListTile(
               leading: const Icon(Icons.search),
-              title: const Text("Search"),
+              title: const Text('Search'),
               onTap: () {
                 Navigator.of(context).pushReplacementNamed(
                   Routes.catalog,
@@ -160,11 +160,11 @@ class SourcesScreen extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.attach_file),
-              title: const Text("Import OPML file"),
+              title: const Text('Import OPML file'),
               onTap: () async {
-                final List<Subscription> subs = await OpmlService.import();
+                final subs = await OpmlService.import();
 
-                if (subs.length > 0) {
+                if (subs.isNotEmpty) {
                   Provider.of<SubscriptionsProvider>(
                     context,
                     listen: false,

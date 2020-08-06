@@ -29,7 +29,7 @@ class SubscriptionScreen extends StatelessWidget {
         builder: (context, model, child) {
           final articles = model.getBySubscription(subscription);
           print(articles);
-          if (articles.length != null && articles.length > 0) {
+          if (articles.length != null && articles.isNotEmpty) {
             return Scrollbar(
               child: RefreshIndicator(
                 child: ListView.separated(
@@ -42,7 +42,7 @@ class SubscriptionScreen extends StatelessWidget {
                         article: article,
                         handleTap: () async {
                           if (prov == OpenIn.internal) {
-                            Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => WebViewScreen(
@@ -83,7 +83,7 @@ class SubscriptionScreen extends StatelessWidget {
           }
 
           return const Center(
-            child: const Text("There are no articles from this feed."),
+            child: Text('There are no articles from this feed.'),
           );
         },
       ),

@@ -7,7 +7,7 @@ import 'package:rssreader/models/article.dart';
 import 'package:rssreader/models/favourite.dart';
 
 class FavouritesProvider extends ChangeNotifier {
-  Set<Favourite> _favourites = HashSet<Favourite>();
+  final Set<Favourite> _favourites = HashSet<Favourite>();
 
   final _db = FavouritesDb();
 

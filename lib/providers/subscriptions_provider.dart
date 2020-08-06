@@ -90,7 +90,7 @@ class SubscriptionsProvider extends ChangeNotifier {
 
   void deleteById(int id) {
     final sub = _subscriptions.firstWhere((e) => e.id == id);
-    final bool wasRemoved = _subscriptions.remove(sub);
+    final wasRemoved = _subscriptions.remove(sub);
 
     if (wasRemoved) {
       try {
@@ -107,7 +107,7 @@ class SubscriptionsProvider extends ChangeNotifier {
   void deleteAllById(Iterable<int> ids) {
     for (final int id in ids) {
       final sub = _subscriptions.firstWhere((e) => e.id == id);
-      final bool wasRemoved = _subscriptions.remove(sub);
+      final wasRemoved = _subscriptions.remove(sub);
 
       if (wasRemoved) {
         try {
@@ -124,7 +124,7 @@ class SubscriptionsProvider extends ChangeNotifier {
 
   void deleteByXmlUrl(String xmlUrl) {
     final sub = _subscriptions.firstWhere((e) => e.xmlUrl == xmlUrl);
-    final bool wasRemoved = _subscriptions.remove(sub);
+    final wasRemoved = _subscriptions.remove(sub);
 
     if (wasRemoved) {
       try {
@@ -173,7 +173,7 @@ class SubscriptionsProvider extends ChangeNotifier {
   void renameExistingCategory(String oldName, String newName) {
     final subs = _subscriptions.where((e) => e.category == oldName);
 
-    if (subs.length == 0) {
+    if (subs.isEmpty) {
       return;
     }
 

@@ -30,7 +30,7 @@ class ArticleItem extends StatelessWidget {
           fadeInDuration: const Duration(milliseconds: 250),
           errorWidget: (context, url, error) => Container(
             child: const Center(
-              child: const Icon(Icons.error),
+              child: Icon(Icons.error),
             ),
             color: Colors.black.withOpacity(0.2),
           ),

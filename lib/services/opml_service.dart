@@ -46,9 +46,11 @@ class OpmlService {
       );
     });
 
+    final df = DateFormat('EEE, dd MMM yyyy HH:mm:ss');
+
     final head = OpmlHead(
       title: 'rssfeed Export',
-      dateCreated: DateTime.now().toUtc().toIso8601String(),
+      dateCreated: df.format(DateTime.now().toUtc()) + ' GMT',
     );
 
     final doc = OpmlDocument(
@@ -85,7 +87,7 @@ class OpmlService {
     try {
       final imported = <Subscription>[];
 
-      final xml = await file.readAsString();
+      final xml = file.readAsStringSync();
       final opml = OpmlDocument.parse(xml);
 
       opml.body.forEach((outline) {
@@ -106,7 +108,7 @@ class OpmlService {
       });
 
       return imported;
-    } catch (e) {
+    } catch (_) {
       throw 'Failed to import feeds';
     }
   }

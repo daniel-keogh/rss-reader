@@ -13,21 +13,21 @@ class Subscription implements Comparable<Subscription> {
 
   Subscription.fromMap(Map<String, dynamic> map)
       : this(
-          id: map["id"],
-          title: map["title"],
-          category: map["category"],
-          xmlUrl: map["xmlUrl"],
+          id: map['id'],
+          title: map['title'],
+          category: map['category'],
+          xmlUrl: map['xmlUrl'],
         );
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
-      "title": title,
-      "category": category,
-      "xmlUrl": xmlUrl,
+      'title': title,
+      'category': category,
+      'xmlUrl': xmlUrl,
     };
 
     if (id != null) {
-      map["id"] = id;
+      map['id'] = id;
     }
 
     return map;

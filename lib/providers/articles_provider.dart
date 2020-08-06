@@ -9,7 +9,7 @@ import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/services/networking.dart';
 
 class ArticlesProvider extends ChangeNotifier {
-  Set<Article> _articles = LinkedHashSet<Article>();
+  final Set<Article> _articles = HashSet<Article>();
 
   SubscriptionsProvider subsProv;
 
@@ -25,7 +25,7 @@ class ArticlesProvider extends ChangeNotifier {
 
     notifyListeners();
 
-    refreshAll();
+    await refreshAll();
   }
 
   Future<void> refresh(Subscription subscription) async {

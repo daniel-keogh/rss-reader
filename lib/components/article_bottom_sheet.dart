@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:rssreader/models/article.dart';
 import 'package:rssreader/components/rounded_bottom_sheet.dart';
+import 'package:rssreader/models/article.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
 
@@ -26,10 +26,10 @@ class ArticleBottomSheet extends StatelessWidget {
     final model = Provider.of<FavouritesProvider>(context, listen: false);
 
     return RoundedBottomSheet(
-      tiles: <ListTile>[
+      children: <ListTile>[
         ListTile(
           leading: const Icon(Icons.open_in_browser),
-          title: const Text("Open"),
+          title: const Text('Open'),
           onTap: () {
             Navigator.pushReplacement(
               context,
@@ -43,7 +43,7 @@ class ArticleBottomSheet extends StatelessWidget {
         ),
         ListTile(
           leading: const Icon(Icons.open_in_new),
-          title: const Text("Open Externally"),
+          title: const Text('Open Externally'),
           onTap: () async {
             Navigator.pop(context);
 
@@ -55,9 +55,10 @@ class ArticleBottomSheet extends StatelessWidget {
         if (!model.contains(article))
           ListTile(
             leading: const Icon(Icons.favorite_border),
-            title: const Text("Favourite"),
+            title: const Text('Favourite'),
             onTap: () {
               Navigator.pop(context);
+
               model.add(article);
               onFavourite?.call();
             },
@@ -65,16 +66,17 @@ class ArticleBottomSheet extends StatelessWidget {
         else
           ListTile(
             leading: const Icon(Icons.favorite),
-            title: const Text("Unfavourite"),
+            title: const Text('Unfavourite'),
             onTap: () {
               Navigator.pop(context);
+
               model.delete(article);
               onUnfavourite?.call();
             },
           ),
         ListTile(
           leading: const Icon(Icons.share),
-          title: const Text("Share"),
+          title: const Text('Share'),
           onTap: () async {
             Navigator.pop(context);
 

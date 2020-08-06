@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/screens/category//search_item.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/models/search_result.dart';
+import 'package:rssreader/screens/category/search_item.dart';
+import 'package:rssreader/screens/category/search_page.dart';
 import 'package:rssreader/services/networking.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen>
     with SingleTickerProviderStateMixin {
-  final NetworkHelper _nh = NetworkHelper();
+  final _nh = NetworkHelper();
 
   AnimationController _controller;
   Animation _animation;
@@ -32,7 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 500),
     );
 
     _animation = Tween(
@@ -57,8 +58,18 @@ class _CategoryScreenState extends State<CategoryScreen>
           SliverAppBar(
             expandedHeight: 200.0,
             floating: false,
-            title: Text(widget.category),
             pinned: true,
+            title: Text(widget.category),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.search),
+                tooltip: 'Search',
+                onPressed: () => showSearch(
+                  context: context,
+                  delegate: SearchPage(),
+                ),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
@@ -96,7 +107,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<SearchResult> data = snapshot.data;
 
-                  return (data != null && data.length > 0)
+                  return (data != null && data.isNotEmpty)
                       ? SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) => SearchItem(
@@ -109,17 +120,17 @@ class _CategoryScreenState extends State<CategoryScreen>
                       : SliverFillRemaining(
                           hasScrollBody: false,
                           child: const Center(
-                            child: const Text('No results found.'),
+                            child: Text('No results found.'),
                           ),
                         );
-                } else {
-                  return SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: const Center(
-                      child: const CircularProgressIndicator(),
-                    ),
-                  );
                 }
+
+                return SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
               },
             ),
           ),

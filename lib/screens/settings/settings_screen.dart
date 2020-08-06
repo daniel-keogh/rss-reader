@@ -19,7 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: const Text('Settings'),
       ),
       body: Scrollbar(
         child: Consumer<SettingsProvider>(
@@ -27,11 +27,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: const EdgeInsets.only(top: 10, bottom: 20),
             children: <Widget>[
               SettingsSection(
-                title: "Appearance",
+                title: 'Appearance',
                 children: <Widget>[
                   Consumer<ThemeProvider>(
                     builder: (context, prov, child) => SwitchListTile(
-                      title: const Text("Dark theme"),
+                      title: const Text('Dark theme'),
                       secondary: const Icon(Icons.brightness_4),
                       value: prov.theme == ActiveTheme.dark,
                       onChanged: (value) {
@@ -44,10 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const Divider(),
               SettingsSection(
-                title: "Behaviour",
+                title: 'Behaviour',
                 children: <Widget>[
                   CheckboxListTile(
-                    title: const Text("Use external browser"),
+                    title: const Text('Use external browser'),
                     subtitle: const Text(
                       "Open articles directly in your device's default web browser.",
                     ),
@@ -58,9 +58,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   CheckboxListTile(
-                    title: const Text("Refresh on open"),
+                    title: const Text('Refresh on open'),
                     subtitle: const Text(
-                      "Automatically refresh all your feeds when the app is launched.",
+                      'Automatically refresh all your feeds when the app is launched.',
                     ),
                     isThreeLine: true,
                     value: model.refreshOnOpen,
@@ -70,12 +70,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const Divider(),
               SettingsSection(
-                title: "Caching",
+                title: 'Caching',
                 children: <Widget>[
                   Column(
                     children: <Widget>[
                       ListTile(
-                        title: const Text("Article limit"),
+                        title: const Text('Article limit'),
                         subtitle: const Text(
                           'Set the maximum number of articles that will be stored on the device.',
                         ),
@@ -83,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       StatefulBuilder(
                         builder: (context, setState) => Slider(
-                          label: "${currentValue.toInt()}",
+                          label: '${currentValue.toInt()}',
                           value: currentValue,
                           min: 500.0,
                           max: 3000.0,
@@ -102,10 +102,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const Divider(),
               SettingsSection(
-                title: "History",
+                title: 'History',
                 children: <Widget>[
                   ListTile(
-                    title: const Text("Clear reading history"),
+                    title: const Text('Clear reading history'),
                     onTap: () {
                       setState(() {
                         Provider.of<ArticlesProvider>(
@@ -119,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const Divider(),
               SettingsSection(
-                title: "About",
+                title: 'About',
                 children: <Widget>[
                   AboutListTile(
                     icon: const Icon(Icons.info_outline),

@@ -10,8 +10,8 @@ Future<String> showCategoryDialog({
   return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
-      String result = currentCategory;
-      String newCategory = '';
+      var result = currentCategory;
+      var newCategory = '';
 
       return AlertDialog(
         title: const Text('Select Category'),
@@ -58,7 +58,7 @@ Future<String> showCategoryDialog({
           FlatButton(
             child: const Text('SAVE'),
             onPressed: () => Navigator.of(context).pop(
-              result.trim().length != 0 && result.trim() != currentCategory
+              result.trim().isNotEmpty && result.trim() != currentCategory
                   ? result.trim()
                   : null,
             ),

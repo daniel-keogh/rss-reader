@@ -10,7 +10,7 @@ enum ActiveTheme {
 class ThemeProvider extends ChangeNotifier {
   ActiveTheme _theme;
 
-  static const String _THEME = "dark-theme";
+  static const String _THEME = 'dark-theme';
 
   ThemeProvider(this._theme);
 
@@ -24,7 +24,7 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
-  get theme => _theme;
+  ActiveTheme get theme => _theme;
 
   set theme(ActiveTheme theme) {
     _theme = theme;

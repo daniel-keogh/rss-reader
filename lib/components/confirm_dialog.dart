@@ -11,13 +11,7 @@ Future<bool> showConfirmDialog({
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(title),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(message),
-            ],
-          ),
-        ),
+        content: Text(message),
         actions: <Widget>[
           FlatButton(
             child: const Text('CANCEL'),

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/components/confirm_dialog.dart';
 import 'package:rssreader/models/favourite.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
-import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:rssreader/utils/constants.dart';
@@ -19,7 +19,7 @@ class FavouritesScreen extends StatelessWidget {
     return Consumer<FavouritesProvider>(
       builder: (context, model, child) {
         final favs = model.favourites;
-        final bool hasItems = favs.length != null && favs.length > 0;
+        final hasItems = favs.length != null && favs.isNotEmpty;
 
         return Scaffold(
           appBar: AppBar(
@@ -30,7 +30,7 @@ class FavouritesScreen extends StatelessWidget {
                   icon: Icon(Icons.clear_all),
                   tooltip: 'Clear all',
                   onPressed: () async {
-                    bool confirmed = await showConfirmDialog(
+                    final confirmed = await showConfirmDialog(
                       context: context,
                       title: 'Delete',
                       message:
@@ -61,7 +61,7 @@ class FavouritesScreen extends StatelessWidget {
                     ),
                   ),
                 )
-              : Center(
+              : const Center(
                   child: Text("You don't have any favourites."),
                 ),
         );
@@ -123,7 +123,7 @@ class _ListItem extends StatelessWidget {
               : null,
           onTap: () async {
             if (openIn == OpenIn.internal) {
-              Navigator.push(
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => WebViewScreen(

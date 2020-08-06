@@ -4,7 +4,9 @@ class Style {
   Style._();
 
   static ThemeData getThemeData() {
-    return ThemeData();
+    return ThemeData(
+      splashFactory: InkRipple.splashFactory,
+    );
   }
 
   static ThemeData getDarkThemeData() {

@@ -24,7 +24,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
   final GlobalKey<AnimatedListState> _globalKey = GlobalKey();
 
   bool _selectMultiple = false;
-  Map<int, bool> _checkboxValues = {};
+  final Map<int, bool> _checkboxValues = {};
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
             ),
           ],
         ),
-        body: (items.length != null && items.length > 0)
+        body: (items.length != null && items.isNotEmpty)
             ? Scrollbar(
                 child: AnimatedList(
                   key: _globalKey,
@@ -131,7 +131,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
                 ),
               )
             : const Center(
-                child: const Text(
+                child: Text(
                   'There are no subscriptions in this category.',
                 ),
               ),

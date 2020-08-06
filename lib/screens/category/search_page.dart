@@ -34,7 +34,7 @@ class SearchPage extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String fmtQuery = query.toLowerCase().trim();
+    final fmtQuery = query.toLowerCase().trim();
 
     return fmtQuery.isNotEmpty
         ? FutureBuilder(
@@ -43,16 +43,16 @@ class SearchPage extends SearchDelegate {
               if (snapshot.connectionState == ConnectionState.done) {
                 final List<SearchResult> data = snapshot.data;
 
-                return data.length > 0
+                return data.isNotEmpty
                     ? ListView.builder(
                         itemBuilder: (context, index) => SearchItem(
                           searchResult: data[index],
-                          category: "Uncategorized",
+                          category: 'Uncategorized',
                         ),
                         itemCount: data.length,
                       )
                     : const Center(
-                        child: const Text("No results found"),
+                        child: Text('No results found'),
                       );
               } else {
                 return const LinearProgressIndicator();
@@ -60,13 +60,13 @@ class SearchPage extends SearchDelegate {
             },
           )
         : const Center(
-            child: const Text("Enter a feed name or a URL"),
+            child: Text('Enter a feed name or a URL'),
           );
   }
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return theme.copyWith(
       inputDecorationTheme: InputDecorationTheme(

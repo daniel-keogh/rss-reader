@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:rssreader/screens/home/search_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:rssreader/components/article_bottom_sheet.dart';
+import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/models/article.dart';
 import 'package:rssreader/providers/articles_provider.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
-import 'package:rssreader/components/article_bottom_sheet.dart';
-import 'package:rssreader/components/side_drawer.dart';
 import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/screens/home/filter_button.dart';
+import 'package:rssreader/screens/home/search_page.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
 import 'package:rssreader/utils/constants.dart';
 
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       articles = model.getByCategory(category);
     }
 
-    return articles.length != 0
+    return articles.isNotEmpty
         ? Scrollbar(
             child: RefreshIndicator(
               child: ListView.builder(
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       article: article,
                       handleTap: () async {
                         if (prov == OpenIn.internal) {
-                          Navigator.push(
+                          await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => WebViewScreen(
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         : const Center(
-            child: const CircularProgressIndicator(),
+            child: CircularProgressIndicator(),
           );
   }
 

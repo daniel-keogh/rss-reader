@@ -4,7 +4,7 @@ class SearchResult {
   final String publisherImg;
   final String website;
 
-  SearchResult({
+  const SearchResult({
     this.title,
     this.xmlUrl,
     this.publisherImg,

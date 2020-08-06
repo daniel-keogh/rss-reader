@@ -1,53 +1,53 @@
 import 'package:flutter/material.dart';
 
-import 'package:rssreader/components/search_page.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/screens/catalog/catalog_item.dart';
 import 'package:rssreader/screens/category/category_screen.dart';
+import 'package:rssreader/screens/category/search_page.dart';
 
 class CatalogScreen extends StatelessWidget {
   static const String _path = 'assets/catalog';
 
   final List<CatalogPhoto> _photos = [
     const CatalogPhoto(
-      title: "News",
-      asset: "$_path/news.jpg",
+      title: 'News',
+      asset: '$_path/news.jpg',
     ),
     const CatalogPhoto(
-      title: "Technology",
-      asset: "$_path/tech.jpg",
+      title: 'Technology',
+      asset: '$_path/tech.jpg',
     ),
     const CatalogPhoto(
-      title: "Science & Space",
-      asset: "$_path/science.jpg",
+      title: 'Science & Space',
+      asset: '$_path/science.jpg',
     ),
     const CatalogPhoto(
-      title: "Business",
-      asset: "$_path/business.jpg",
+      title: 'Business',
+      asset: '$_path/business.jpg',
     ),
     const CatalogPhoto(
-      title: "Software Development",
-      asset: "$_path/software.jpg",
+      title: 'Software Development',
+      asset: '$_path/software.jpg',
     ),
     const CatalogPhoto(
-      title: "DIY",
-      asset: "$_path/diy.jpg",
+      title: 'DIY',
+      asset: '$_path/diy.jpg',
     ),
     const CatalogPhoto(
-      title: "Books",
-      asset: "$_path/books.jpg",
+      title: 'Books',
+      asset: '$_path/books.jpg',
     ),
     const CatalogPhoto(
-      title: "Music",
-      asset: "$_path/music.jpg",
+      title: 'Music',
+      asset: '$_path/music.jpg',
     ),
     const CatalogPhoto(
-      title: "Gaming",
-      asset: "$_path/gaming.jpg",
+      title: 'Gaming',
+      asset: '$_path/gaming.jpg',
     ),
     const CatalogPhoto(
-      title: "Sport",
-      asset: "$_path/sport.jpg",
+      title: 'Sport',
+      asset: '$_path/sport.jpg',
     ),
   ];
 

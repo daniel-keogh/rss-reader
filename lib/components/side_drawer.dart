@@ -33,18 +33,28 @@ class SideDrawer extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
                         child: ListTile(
-                          title: const Text('Sources'),
-                          leading: const Icon(Icons.library_add),
+                          title: const Text('Favourites'),
+                          leading: const Icon(Icons.favorite_border),
                           onTap: () {
-                            Navigator.popAndPushNamed(context, Routes.sources);
+                            Navigator.popAndPushNamed(
+                              context,
+                              Routes.favourites,
+                            );
                           },
                         ),
                       ),
                       ListTile(
-                        title: const Text('Favourites'),
-                        leading: const Icon(Icons.favorite_border),
+                        title: const Text('Catalog'),
+                        leading: const Icon(Icons.grid_on),
                         onTap: () {
-                          Navigator.popAndPushNamed(context, Routes.favourites);
+                          Navigator.popAndPushNamed(context, Routes.catalog);
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('Sources'),
+                        leading: const Icon(Icons.library_books),
+                        onTap: () {
+                          Navigator.popAndPushNamed(context, Routes.sources);
                         },
                       ),
                       const Divider(),
@@ -53,9 +63,7 @@ class SideDrawer extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final category = value.categories.elementAt(index);
                             final items = value.subscriptions
-                                .where(
-                                  (e) => e.category == category,
-                                )
+                                .where((e) => e.category == category)
                                 .toList();
 
                             return ExpansionTile(
@@ -100,7 +108,7 @@ class SideDrawer extends StatelessWidget {
               Align(
                 alignment: FractionalOffset.bottomCenter,
                 child: Material(
-                  elevation: 16.0,
+                  elevation: 4.0,
                   child: ListTile(
                     title: const Text('Settings'),
                     leading: const Icon(Icons.settings),

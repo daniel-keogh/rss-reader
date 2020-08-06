@@ -44,7 +44,7 @@ class ArticleSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final String fmtQuery = query.toLowerCase().trim();
+    final fmtQuery = query.toLowerCase().trim();
 
     List<Article> results;
 
@@ -56,24 +56,21 @@ class ArticleSearch extends SearchDelegate {
           .where((e) => e.title.toLowerCase().contains(fmtQuery.toLowerCase()))
           .toList();
 
-      if (results.length == 0) {
+      if (results.isEmpty) {
         return const Center(
-          child: const Text("No results found."),
+          child: Text('No results found.'),
         );
       }
     }
 
     return Scrollbar(
-      child: ListView.separated(
+      child: ListView.builder(
         itemBuilder: (context, index) => ArticleItem(
           article: results[index],
           handleTap: onResultTap,
           handleLongPress: onResultLongPress,
         ),
         itemCount: results.length,
-        separatorBuilder: (context, index) {
-          return const Divider(thickness: 0.5);
-        },
         padding: const EdgeInsets.symmetric(vertical: 20.0),
       ),
     );
@@ -81,7 +78,7 @@ class ArticleSearch extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return theme.copyWith(
       inputDecorationTheme: InputDecorationTheme(

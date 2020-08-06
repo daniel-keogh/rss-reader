@@ -11,8 +11,8 @@ class SettingsProvider extends ChangeNotifier {
   OpenIn _openIn = OpenIn.external;
   bool _refreshOnOpen = true;
 
-  static const String _OPEN_IN_APP = "open-in-app";
-  static const String _REFRESH_ON_OPEN = "refresh-on-open";
+  static const String _OPEN_IN_APP = 'open-in-app';
+  static const String _REFRESH_ON_OPEN = 'refresh-on-open';
 
   SettingsProvider() {
     _init();
@@ -36,7 +36,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  get openIn => _openIn;
+  OpenIn get openIn => _openIn;
 
   set openIn(OpenIn value) {
     _openIn = value;
@@ -48,7 +48,7 @@ class SettingsProvider extends ChangeNotifier {
     });
   }
 
-  get refreshOnOpen => _refreshOnOpen;
+  bool get refreshOnOpen => _refreshOnOpen;
 
   set refreshOnOpen(bool value) {
     _refreshOnOpen = value;

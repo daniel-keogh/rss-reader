@@ -26,11 +26,9 @@ class NetworkHelper {
       try {
         return _parseRss(response.body, sub);
       } catch (e) {
-        print("$e: ${sub.title} -- ${sub.xmlUrl}");
         return _parseAtom(response.body, sub);
       }
     } catch (e) {
-      print("$e: ${sub.title} -- ${sub.xmlUrl}");
       return [];
     }
   }
@@ -38,11 +36,11 @@ class NetworkHelper {
   List<Article> _parseRss(String body, Subscription sub) {
     final feed = RssFeed.parse(body);
 
-    final df = DateFormat("EEE, d MMM yyyy HH:mm:ss z");
+    final df = DateFormat('EEE, d MMM yyyy HH:mm:ss z');
 
     return feed.items.map((item) {
       String img;
-      if (item.media.contents.length > 0) {
+      if (item.media.contents.isNotEmpty) {
         img = item.media.contents[0].url;
       } else {
         img = item.enclosure?.url;
@@ -67,7 +65,7 @@ class NetworkHelper {
     return feed.items.map((item) {
       String img;
 
-      if (item.media.contents.length > 0) {
+      if (item.media.contents.isNotEmpty) {
         img = item.media.contents[0].url;
       }
 
@@ -92,10 +90,10 @@ class NetworkHelper {
     query = Uri.encodeComponent(query.toLowerCase());
 
     var res = await _client.get(
-      "http://feedly.com/v3/search/feeds?query=$query&count=$count&locale=$locale",
+      'http://feedly.com/v3/search/feeds?query=$query&count=$count&locale=$locale',
     );
 
-    List<SearchResult> searchResults = [];
+    var searchResults = <SearchResult>[];
 
     if (res.statusCode == 200) {
       var data = json.decode(res.body);

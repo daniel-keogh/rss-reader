@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/services/opml_service.dart';
 import 'package:rssreader/utils/routes.dart';
@@ -51,8 +49,7 @@ class Onboarding extends StatelessWidget {
                         .onSurface
                         .withOpacity(0.12),
                     onPressed: () async {
-                      final List<Subscription> subs =
-                          await OpmlService.import();
+                      final subs = await OpmlService.import();
 
                       Provider.of<SubscriptionsProvider>(
                         context,

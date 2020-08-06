@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class RoundedBottomSheet extends StatelessWidget {
-  final List<ListTile> tiles;
+  final List<ListTile> children;
 
   const RoundedBottomSheet({
     Key key,
-    @required this.tiles,
+    @required this.children,
   }) : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class RoundedBottomSheet extends StatelessWidget {
           shrinkWrap: true,
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           physics: const NeverScrollableScrollPhysics(),
-          children: <Widget>[...tiles],
+          children: <Widget>[...children],
         )
       ],
     );

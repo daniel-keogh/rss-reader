@@ -38,8 +38,8 @@ class CatalogItem extends StatelessWidget {
       footer: Material(
         color: Colors.transparent,
         shape: const RoundedRectangleBorder(
-          borderRadius: const BorderRadius.vertical(
-            bottom: const Radius.circular(4),
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(4),
           ),
         ),
         clipBehavior: Clip.antiAlias,

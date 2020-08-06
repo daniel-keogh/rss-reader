@@ -28,9 +28,9 @@ class WebViewScreen extends StatelessWidget {
           debuggingEnabled: false,
           initialUrl: article.url,
           javascriptMode: JavascriptMode.unrestricted,
-          gestureRecognizers: [
+          gestureRecognizers: {
             Factory(() => EagerGestureRecognizer()),
-          ].toSet(),
+          },
         ),
       ),
       bottomNavigationBar: _BottomAppBar(article: article),
