@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/components/confirm_dialog.dart';
 import 'package:rssreader/models/favourite.dart';
 import 'package:rssreader/providers/favourites_provider.dart';
 import 'package:rssreader/providers/settings_provider.dart';
-import 'package:rssreader/screens/webview/webview_screen.dart';
+import 'package:rssreader/screens/home/article_item.dart';
 import 'package:rssreader/utils/constants.dart';
 
 class FavouritesScreen extends StatelessWidget {
@@ -27,7 +26,7 @@ class FavouritesScreen extends StatelessWidget {
             actions: <Widget>[
               if (hasItems)
                 IconButton(
-                  icon: Icon(Icons.clear_all),
+                  icon: const Icon(Icons.clear_all),
                   tooltip: 'Clear all',
                   onPressed: () async {
                     final confirmed = await showConfirmDialog(
@@ -38,10 +37,7 @@ class FavouritesScreen extends StatelessWidget {
                     );
 
                     if (confirmed) {
-                      Provider.of<FavouritesProvider>(
-                        context,
-                        listen: false,
-                      ).deleteAll();
+                      model.deleteAll();
                     }
                   },
                 ),
@@ -55,7 +51,6 @@ class FavouritesScreen extends StatelessWidget {
                     initialItemCount: favs.length,
                     itemBuilder: (context, index, animation) => _ListItem(
                       favourite: favs[index],
-                      index: index,
                       animation: animation,
                       onDelete: () => _deleteItem(index),
                     ),
@@ -85,14 +80,12 @@ class FavouritesScreen extends StatelessWidget {
 
 class _ListItem extends StatelessWidget {
   final Favourite favourite;
-  final int index;
   final Animation animation;
   final Function onDelete;
 
   _ListItem({
     Key key,
     @required this.favourite,
-    @required this.index,
     @required this.animation,
     @required this.onDelete,
   }) : super(key: key);
@@ -103,40 +96,9 @@ class _ListItem extends StatelessWidget {
       sizeFactor: animation,
       child: Selector<SettingsProvider, OpenIn>(
         selector: (context, settings) => settings.openIn,
-        builder: (context, openIn, child) => ListTile(
-          title: Padding(
-            padding: const EdgeInsets.only(bottom: 6.0),
-            child: Text(
-              favourite.article.title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          subtitle: Text(
-            favourite.article.publisher,
-            style: const TextStyle(fontSize: 12),
-          ),
-          leading: favourite.article.imageUrl != null
-              ? Image.network(favourite.article.imageUrl)
-              : null,
-          onTap: () async {
-            if (openIn == OpenIn.internal) {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WebViewScreen(
-                    article: favourite.article,
-                  ),
-                ),
-              );
-            } else {
-              if (await canLaunch(favourite.article.url)) {
-                await launch(favourite.article.url);
-              }
-            }
-          },
+        builder: (context, openIn, child) => ArticleItem(
+          openIn: openIn,
+          article: favourite.article,
           onLongPress: () {
             showModalBottomSheet(
               context: context,

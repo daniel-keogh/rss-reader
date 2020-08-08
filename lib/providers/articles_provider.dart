@@ -80,9 +80,11 @@ class ArticlesProvider extends ChangeNotifier {
 
   UnmodifiableListView<Article> getUnreadByCategory([String category = 'All']) {
     return UnmodifiableListView(
-      _articles.where(
-        (e) => ((category == 'All' || e.category == category) && !e.isRead),
-      ),
+      _articles
+          .where((e) =>
+              ((category == 'All' || e.category == category) && !e.isRead))
+          .toList()
+            ..sort(),
     );
   }
 
@@ -90,18 +92,17 @@ class ArticlesProvider extends ChangeNotifier {
     final a = _articles.firstWhere((e) => e.url == article.url);
 
     a.isRead = true;
+    _db.updateReadStatus(article);
 
     notifyListeners();
-
-    _db.updateReadStatus(article);
   }
 
   void updateStatus(bool isRead) {
     _articles.forEach((e) => e.isRead = isRead);
 
-    notifyListeners();
-
     _db.updateAllReadStatus(isRead);
+
+    notifyListeners();
   }
 
   void update() {

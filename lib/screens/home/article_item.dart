@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
-import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/providers/articles_provider.dart';
 import 'package:rssreader/screens/webview/webview_screen.dart';
-import 'package:rssreader/utils/constants.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:rssreader/models/article.dart';
@@ -15,11 +13,13 @@ import 'package:url_launcher/url_launcher.dart';
 class ArticleItem extends StatelessWidget {
   final Article article;
   final OpenIn openIn;
+  final Function onLongPress;
 
   ArticleItem({
     Key key,
     @required this.article,
     @required this.openIn,
+    @required this.onLongPress,
   }) : super(key: key);
 
   Widget _buildImage() {
@@ -81,8 +81,9 @@ class ArticleItem extends StatelessWidget {
                             article.title,
                             style: TextStyle(
                               fontSize: 16.5,
-                              color:
-                                  article.isRead ? Colors.grey : Colors.black,
+                              color: (article.isRead != null && article.isRead)
+                                  ? Colors.grey
+                                  : null,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -114,7 +115,7 @@ class ArticleItem extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.more_vert),
                       color: Colors.grey,
-                      onPressed: () => _openBottomSheet(context),
+                      onPressed: onLongPress,
                     ),
                   ],
                 ),
@@ -122,7 +123,7 @@ class ArticleItem extends StatelessWidget {
             ),
           ),
           onTap: () => _handleTap(context),
-          onLongPress: () => _openBottomSheet(context),
+          onLongPress: onLongPress,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -152,16 +153,5 @@ class ArticleItem extends StatelessWidget {
       context,
       listen: false,
     ).markAsRead(article);
-  }
-
-  _openBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: bottomSheetShape,
-      builder: (context) => ArticleBottomSheet(
-        article: article,
-      ),
-    );
   }
 }

@@ -83,13 +83,13 @@ class NetworkHelper {
   }
 
   Future<List<SearchResult>> feedSearch(
-    String query, [
-    int count = 20,
+    String query, {
+    int count = 30,
     String locale = 'en',
-  ]) async {
+  }) async {
     query = Uri.encodeComponent(query.toLowerCase());
 
-    var res = await _client.get(
+    final res = await _client.get(
       'http://feedly.com/v3/search/feeds?query=$query&count=$count&locale=$locale',
     );
 

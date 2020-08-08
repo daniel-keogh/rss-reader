@@ -44,15 +44,8 @@ class SideDrawer extends StatelessWidget {
                         ),
                       ),
                       ListTile(
-                        title: const Text('Catalog'),
-                        leading: const Icon(Icons.grid_on),
-                        onTap: () {
-                          Navigator.popAndPushNamed(context, Routes.catalog);
-                        },
-                      ),
-                      ListTile(
                         title: const Text('Sources'),
-                        leading: const Icon(Icons.library_books),
+                        leading: const Icon(Icons.library_add),
                         onTap: () {
                           Navigator.popAndPushNamed(context, Routes.sources);
                         },

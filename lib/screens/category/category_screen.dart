@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rssreader/models/catalog_photo.dart';
 import 'package:rssreader/models/search_result.dart';
 import 'package:rssreader/screens/category/search_item.dart';
-import 'package:rssreader/screens/category/feed_seach.dart';
+import 'package:rssreader/screens/category/feed_search.dart';
 import 'package:rssreader/services/networking.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -44,8 +44,8 @@ class _CategoryScreenState extends State<CategoryScreen>
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,7 +87,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
-                          end: Alignment(0, .2),
+                          end: Alignment(0, 0.2),
                           colors: <Color>[
                             Color(0xc0000000),
                             Color(0x00000000),

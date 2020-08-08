@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:rssreader/components/article_bottom_sheet.dart';
 import 'package:rssreader/models/article.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/screens/home/article_item.dart';
+import 'package:rssreader/utils/constants.dart';
 
 class ArticleList extends StatelessWidget {
   final List<Article> articles;
@@ -23,6 +25,16 @@ class ArticleList extends StatelessWidget {
           builder: (context, openIn, child) => ArticleItem(
             article: articles[index],
             openIn: openIn,
+            onLongPress: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: bottomSheetShape,
+                builder: (context) => ArticleBottomSheet(
+                  article: articles[index],
+                ),
+              );
+            },
           ),
         );
       },
