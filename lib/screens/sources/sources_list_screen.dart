@@ -153,7 +153,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
     );
   }
 
-  void _forSelected(List<Subscription> items, Function func) {
+  void _forSelected(List<Subscription> items, Function cb) {
     _checkboxValues.forEach((key, value) {
       if (value) {
         int index = items.indexWhere((e) => e.id == key);
@@ -161,7 +161,7 @@ class _SourcesListScreenState extends State<SourcesListScreen> {
         _deleteItem(index);
         items.removeAt(index);
 
-        func(key);
+        cb(key);
       }
     });
   }

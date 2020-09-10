@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import 'package:rssreader/components/confirm_dialog.dart';
 import 'package:rssreader/components/rounded_bottom_sheet.dart';
-import 'package:rssreader/models/subscription.dart';
 import 'package:rssreader/providers/subscriptions_provider.dart';
 import 'package:rssreader/screens/sources/dialogs.dart';
 import 'package:rssreader/screens/sources/sources_list_screen.dart';
@@ -61,7 +58,7 @@ class SourcesScreen extends StatelessWidget {
   Widget _buildBody() {
     return Consumer<SubscriptionsProvider>(
       builder: (context, model, child) {
-        if (model.categories.length == null || model.categories.length == 0) {
+        if (model.categories.isEmpty) {
           return const Center(
             child: Text('You are not subscribed to any feeds.'),
           );
@@ -115,13 +112,13 @@ class SourcesScreen extends StatelessWidget {
                           onTap: () async {
                             Navigator.pop(context);
 
-                            bool confirmed = await showConfirmDialog(
+                            final confirmation = await showConfirmDialog(
                               context: context,
                               message:
                                   'Are you sure you want to delete everything in this category?',
                             );
 
-                            if (confirmed) {
+                            if (confirmation) {
                               model.deleteByCategory(category);
                             }
                           },

@@ -121,4 +121,11 @@ class ArticlesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void clear() {
+    _db.clear();
+    _articles.clear();
+
+    notifyListeners();
+  }
 }

@@ -79,4 +79,9 @@ class ArticlesDb {
       },
     );
   }
+
+  Future<void> clear() async {
+    final db = await _db.database;
+    return await db.delete(_TABLE_ARTICLES);
+  }
 }

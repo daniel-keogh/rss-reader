@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:rssreader/providers/articles_provider.dart';
 
 import 'package:rssreader/screens/settings/settings_section.dart';
+import 'package:rssreader/providers/articles_provider.dart';
 import 'package:rssreader/providers/settings_provider.dart';
 import 'package:rssreader/providers/theme_provider.dart';
 
@@ -13,7 +14,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  double currentValue = 500.0;
+  double _currentValue = 500.0;
+  bool _toastVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +74,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SettingsSection(
                 title: 'Caching',
                 children: <Widget>[
+                  ListTile(
+                    title: const Text('Clear cached articles'),
+                    onTap: () {
+                      setState(() {
+                        Provider.of<ArticlesProvider>(
+                          context,
+                          listen: false,
+                        ).clear();
+                        _showToast('Cached articles cleared');
+                      });
+                    },
+                  ),
+                  const Divider(),
                   Column(
                     children: <Widget>[
                       ListTile(
@@ -83,13 +98,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       StatefulBuilder(
                         builder: (context, setState) => Slider(
-                          label: '${currentValue.toInt()}',
-                          value: currentValue,
+                          label: '${_currentValue.toInt()}',
+                          value: _currentValue,
                           min: 500.0,
                           max: 3000.0,
                           divisions: 5,
                           onChanged: (value) {
-                            setState(() => currentValue = value);
+                            setState(() => _currentValue = value);
                           },
                           onChangeEnd: (value) {
                             print(value);
@@ -113,6 +128,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           listen: false,
                         ).updateStatus(false);
                       });
+                      _showToast('History cleared');
                     },
                   ),
                 ],
@@ -137,6 +153,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  _showToast(String msg) async {
+    if (_toastVisible) {
+      await Fluttertoast.cancel();
+    }
+
+    _toastVisible = await Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
